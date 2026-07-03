@@ -8,7 +8,7 @@ from typing import Optional
 import h5py
 import numpy as np
 
-from .schema import DatasetManifest, EpisodeMetaData
+from .schema import DatasetManifest, EpisodeMetadata
 
 __MANIFEST_FILENAME__ = "manifest.json"
 
@@ -22,27 +22,27 @@ class ShardWriter:
     self._current_file: Optional[h5py.File] = None
     self._shard_paths: list[Path] = []
   
-  def add_episode(self, frames: np.ndarray, actions: np.ndarray, metadata: EpisodeMetaData)-> None:
+  def add_episode(self, frames: np.ndarray, actions: np.ndarray, metadata: EpisodeMetadata)-> None:
     if (
       self._current_file is None
       or self._episodes_in_current_shard >= self._episodes_per_shard
     ):
       self._roll_shard()
 
-      assert self._current_file is not None
-      group = self._current_file.create_group(metadata.episode_id)
-      group.create_dataset(
-          "frames", data=frames, compression="gzip", compression_opts=4
-      )
-      group.create_dataset("actions", data=actions)
-      group.attrs["seed"] = metadata.seed
-      group.attrs["num_steps"] = metadata.num_steps
-      group.attrs["env_name"] = metadata.env_name
-      group.attrs["env_version"] = metadata.env_version
-      group.attrs["action_space_version"] = metadata.action_space_version
-      group.attrs["policy_name"] = metadata.policy_name
+    assert self._current_file is not None
+    group = self._current_file.create_group(metadata.episode_id)
+    group.create_dataset(
+        "frames", data=frames, compression="gzip", compression_opts=4
+    )
+    group.create_dataset("actions", data=actions)
+    group.attrs["seed"] = metadata.seed
+    group.attrs["num_steps"] = metadata.num_steps
+    group.attrs["env_name"] = metadata.env_name
+    group.attrs["env_version"] = metadata.env_version
+    group.attrs["action_space_version"] = metadata.action_space_version
+    group.attrs["policy_name"] = metadata.policy_name
 
-      self._episodes_in_current_shard += 1
+    self._episodes_in_current_shard += 1
   
   def _roll_shard(self) -> None:
     if self._current_file is not None:

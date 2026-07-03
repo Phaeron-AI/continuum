@@ -15,7 +15,7 @@ class StepRecord:
   done: bool
 
 @dataclass(frozen=True)
-class EpisodeMetaData:
+class EpisodeMetadata:
   episode_id: str
   seed: int
   num_steps: int
