@@ -6,8 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from ..src.data.schema import DatasetManifest, EpisodeMetaData
-from ..src.data.storage import (
+from src.engine.data.schema import DatasetManifest, EpisodeMetadata
+from src.engine.data.storage import (
   ShardWriter,
   iterate_episodes,
   load_manifest,
@@ -18,7 +18,7 @@ from ..src.data.storage import (
 def _make_fake_episode(episode_id: str, num_steps: int = 5):
   frames = np.random.randint(0, 255, size=(num_steps + 1, 8, 8, 3), dtype=np.uint8)
   actions = np.random.randint(0, 5, size=(num_steps,), dtype=np.int64)
-  metadata = EpisodeMetaData(
+  metadata = EpisodeMetadata(
     episode_id=episode_id,
     seed=0,
     num_steps=num_steps,

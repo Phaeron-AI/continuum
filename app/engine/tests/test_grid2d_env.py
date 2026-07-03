@@ -7,9 +7,9 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from ..src.envs.base import Action
-from ..src.envs.grid2d.config import Grid2DConfig
-from ..src.envs.grid2d.env import Grid2DEnv
+from engine.envs.base import Action
+from engine.envs.grid2d.config import Grid2DConfig
+from engine.envs.grid2d.env import Grid2DEnv
 
 
 class MockRenderer:
