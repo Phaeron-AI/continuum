@@ -34,12 +34,13 @@ class Grid2DRenderer:
         obstacle.astype(int), # type: ignore
         self._config.obstacle_radius,
       )
-      pygame.draw.circle(
-        self._surface,
-        AGENT_COLOR,
-        agent_pos.astype(int),  # type: ignore
-        self._config.agent_radius,
-      )
+    pygame.draw.circle(
+      self._surface,
+      AGENT_COLOR,
+      agent_pos.astype(int),  # type: ignore
+      self._config.agent_radius,
+    )
 
-      frame = pygame.surfarray.array3d(self._surface)
-      return np.transpose(frame, (1, 0, 2)).astype(np.uint8)
+    frame = pygame.surfarray.array3d(self._surface)
+
+    return np.transpose(frame, (1, 0, 2)).astype(np.uint8)
