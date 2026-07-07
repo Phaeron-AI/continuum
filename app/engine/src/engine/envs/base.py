@@ -35,6 +35,10 @@ class StepResult:
   info: dict[str, Any]
 
 class Env(ABC):
+  observation_spec: ObservationSpec
+  action_space_version: str = ACTION_SPACE_VERSION
+  env_version: str
+
   @abstractmethod
   def reset(self, seed: Optional[int] = None)-> np.ndarray:...
 
