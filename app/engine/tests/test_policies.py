@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.engine.envs.policies.random_policy import RandomPolicy
+from engine.envs.policies.random_policy import RandomPolicy
 
 
 def test_random_policy_stays_in_range() -> None:

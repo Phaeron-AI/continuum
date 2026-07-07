@@ -6,8 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from src.engine.data.schema import DatasetManifest, EpisodeMetadata
-from src.engine.data.storage import (
+from engine.data.schema import DatasetManifest, EpisodeMetadata
+from engine.data.storage import (
   ShardWriter,
   iterate_episodes,
   load_manifest,
