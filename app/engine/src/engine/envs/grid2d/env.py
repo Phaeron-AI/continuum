@@ -20,6 +20,7 @@ class _Grid2DState:
 
 
 class Grid2DEnv(Env):
+  env_version = "v1"
   def __init__(self, config: Optional[Grid2DConfig] = None, renderer: Optional[Renderer] = None)-> None:
     self._config = config or Grid2DConfig()
     self.observation_spec = ObservationSpec(
