@@ -5,12 +5,12 @@ from torch import Tensor
 import torch.nn as nn
 
 def round_ste(z: Tensor)-> Tensor:
-  return z * (torch.round(z) - z).detach()
+  return z + (torch.round(z) - z).detach()
 
 class FSQ(nn.Module):
   def __init__(self, levels: tuple[int, ...])-> None:
     super().__init__()
-    self.levels = tuple[levels]
+    self.levels = tuple(levels)
     levels_t = torch.tensor(self.levels, dtype=torch.float32)
     self.register_buffer("_levels", levels_t, persistent=False)
     basis = torch.cumprod(
@@ -20,12 +20,12 @@ class FSQ(nn.Module):
   
   @property
   def num_dims(self)-> int:
-    return len(self.levels) # type: ignore
+    return len(self.levels) 
   
   @property
   def codebook_size(self)-> int:
     size = 1
-    for level in self.levels: # type: ignore
+    for level in self.levels:
       size *= level
     return size
   
@@ -41,7 +41,7 @@ class FSQ(nn.Module):
     return torch.tanh(z + shift) * half_l - offset
   
   def quantize(self, z: Tensor)-> Tensor:
-    quantized = round_ste(z)
+    quantized = round_ste(self._bound(z))
     half_width = self._levels.to(device=z.device) // 2  # type: ignore
 
     return quantized / half_width
