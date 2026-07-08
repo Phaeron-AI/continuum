@@ -62,7 +62,7 @@ def train_tokenizer(tokenizer: Tokenizer, loader: DataLoader, config: TrainConfi
   batches = _infinite(loader)
   ckpt_dir = Path(config.checkpoint_dir)
 
-  while state.step <= config.max_steps:
+  while state.step < config.max_steps:
     x = next(batches).to(device, non_blocking=True)
 
     optimizer.zero_grad(set_to_none=True)
