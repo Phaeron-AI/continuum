@@ -6,7 +6,7 @@ from torch import Tensor
 import torch.nn.functional as F
 
 def frame_to_tensor(frame: np.ndarray, target_size: tuple[int, int] = (64, 64))-> Tensor:
-  if frame.ndim != 2:
+  if frame.ndim != 3:
     raise ValueError(f"Expected HWC frame, got shape: {frame.shape}")
   
   tensor = torch.from_numpy(frame).permute(2, 0, 1).float() / 255.0
