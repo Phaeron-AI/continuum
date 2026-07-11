@@ -55,6 +55,13 @@ class FSQ(nn.Module):
     basis = self._basis.to(z_normalized.device)
     return (digits * basis).sum(dim=-1) # type: ignore
   
+  def indices_to_code(self, indices: Tensor)-> Tensor:
+    levels = self._levels.to(indices.device).long() # type: ignore
+    basis = self._basis.to(indices.device)
+    digits = (indices.unsqueeze(-1) // basis) % levels  # (..., D)  # type: ignore
+    half_width = levels // 2
+    return (digits - half_width).float() / half_width.float()
+  
   def forward(self, z: Tensor)-> tuple[Tensor, Tensor]:
     z_channels_last = z.movedim(1, -1)  # (B, H, W, D)
     quantized = self.quantize(z_channels_last)

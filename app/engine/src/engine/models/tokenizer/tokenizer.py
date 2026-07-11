@@ -48,4 +48,6 @@ class Tokenizer(nn.Module):
   
   @torch.no_grad
   def decode_indices(self, z: Tensor):
-    pass
+    codes = self.quantizer.indices_to_codes(indices)  # (B, h, w, D)  # type: ignore
+    codes = codes.movedim(-1, 1)  # (B, D, h, w)
+    return self.decoder(codes)
