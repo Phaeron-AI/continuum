@@ -28,6 +28,11 @@ class IdentityMixer(SequenceMixer):
 def make_mixer(kind: str, d_model: int, **kwargs: object)-> SequenceMixer:
   if kind == "identity":
     return IdentityMixer(d_model=d_model)
+  if kind == "ssm":
+    from engine.models.world_model.ssm import SelectiveSSM
+
+    d_state = int(kwargs.get("d_state", 16))  # type: ignore
+    return SelectiveSSM(d_model, d_state=d_state)
   raise ValueError(
     f"unknown mixer kind: {kind!r}. Available: 'identity' "
     f"(ssm/mamba land in later sub-phases)"
