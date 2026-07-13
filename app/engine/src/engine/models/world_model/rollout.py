@@ -55,7 +55,7 @@ def rollout_to_frames(
   seed_tokens: Tensor,
   actions: Tensor,
   num_frames: int,
-  temperature: float
+  temperature: float=0.0
 )-> Tensor:
   spec = tokenizer.token_spec
   tpf = spec.grid_height * spec.grid_width
