@@ -28,7 +28,7 @@ class WorldModelConfig:
     return self.vocab_size + self.num_actions
   
   @classmethod
-  def from_token_sec(
+  def from_token_spec(
     cls,
     spec: TokenSpec,
     num_actions: int = 5,

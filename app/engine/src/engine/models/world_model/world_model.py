@@ -59,6 +59,6 @@ class WorldModel(nn.Module):
     return F.cross_entropy(flat_logits[flat_mask], flat_targets[flat_mask])
   
   @torch.no_grad()
-  def predict_mask(self, ids: Tensor)-> Tensor:
+  def predict_next(self, ids: Tensor)-> Tensor:
     logits = self(ids)[:, -1]  # (B, vocab_size) — last position
     return logits.argmax(dim=-1)
