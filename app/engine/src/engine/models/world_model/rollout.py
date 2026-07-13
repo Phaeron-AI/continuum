@@ -47,3 +47,23 @@ def rollout(
     generated.append(torch.stack(frame_tokens, dim=1))  # (B, tokens_per_frame)
 
   return torch.stack(generated, dim=1)  # (B, num_frames, tokens_per_frame)
+
+@torch.no_grad()
+def rollout_to_frames(
+  model: WorldModel,
+  tokenizer, # FrozenTokenizer,
+  seed_tokens: Tensor,
+  actions: Tensor,
+  num_frames: int,
+  temperature: float
+)-> Tensor:
+  spec = tokenizer.token_spec
+  tpf = spec.grid_height * spec.grid_width
+
+  grids = rollout(model, seed_tokens, actions, num_frames, tpf, temperature)
+
+  batch, frames, _ = grids.shape
+  # (B*F, h, w) -> decode -> (B*F, C, H, W) -> (B, F, C, H, W)
+  flat = grids.reshape(batch * frames, spec.grid_height, spec.grid_width)
+  pixels = tokenizer.decode(flat)
+  return pixels.reshape(batch, frames, *pixels.shape[1:])
