@@ -1,12 +1,3 @@
-"""Environment registry.
-
-Maps environment names (the strings that appear in configs and dataset
-manifests) to factory functions. The harness and any future consumer build
-environments through this registry rather than importing concrete classes —
-which is what makes "add a 3D env" a one-line registration instead of a
-hunt for every construction site.
-"""
-
 from __future__ import annotations
 
 from collections.abc import Callable
@@ -18,9 +9,6 @@ _REGISTRY: dict[str, Callable[[Any], Env]] = {}
 
 
 def register_env(name: str, factory: Callable[[Any], Env]) -> None:
-    """Register a factory: takes an env-specific config object, returns an
-    Env. Registering the same name twice is an error — silent replacement
-    is how two modules end up fighting over a name."""
     if name in _REGISTRY:
         raise ValueError(f"Environment {name!r} is already registered")
     _REGISTRY[name] = factory
