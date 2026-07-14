@@ -8,7 +8,7 @@ from typing import Optional
 import h5py
 import numpy as np
 
-from .schema import DatasetManifest, EpisodeMetadata
+from .storage.schema import DatasetManifest, EpisodeMetadata
 
 __MANIFEST_FILENAME__ = "manifest.json"
 

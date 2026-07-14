@@ -5,7 +5,7 @@ from typing import Any
 
 import yaml
 
-from engine.data.harness import GenerationConfig
+from engine.data.generation.harness import GenerationConfig
 from engine.envs.config_registry import dataclass_factory, make_env_config
 
 def load_generation_config(path: Path | str) -> GenerationConfig:

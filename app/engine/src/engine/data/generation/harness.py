@@ -31,8 +31,8 @@ from typing import Any
 
 import numpy as np
 
-from engine.data.schema import DatasetManifest, EpisodeMetadata
-from engine.data.storage import ShardWriter, write_manifest
+from engine.data.storage.schema import DatasetManifest, EpisodeMetadata
+from engine.data.storage.storage import ShardWriter, write_manifest
 from engine.envs.base import Action, Env
 from engine.envs.grid2d.config import Grid2DConfig
 from engine.envs.policies.registry import make_policy

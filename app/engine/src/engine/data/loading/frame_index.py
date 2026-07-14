@@ -5,7 +5,7 @@ from pathlib import Path
 
 import h5py
 
-from engine.data.storage import __MANIFEST_FILENAME__
+from engine.data.storage.storage import __MANIFEST_FILENAME__
 
 @dataclass(frozen=True)
 class FrameLocator:

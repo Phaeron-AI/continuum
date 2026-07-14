@@ -7,8 +7,8 @@ import h5py
 import torch
 import numpy as np
 
-from engine.data.storage import iterate_episodes
-from engine.data.transforms import frame_to_tensor
+from engine.data.storage.storage import iterate_episodes
+from engine.data.storage.transforms import frame_to_tensor
 from engine.models.tokenizer.frozen import FrozenTokenizer
 
 __CACHE_MANIFEST__ = "token_cache_manifest.json"

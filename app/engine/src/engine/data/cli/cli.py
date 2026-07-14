@@ -13,8 +13,8 @@ import argparse
 import dataclasses
 import logging
 
-from engine.data.config_loader import load_generation_config
-from engine.data.harness import generate_dataset
+from engine.data.generation.config_loader import load_generation_config
+from engine.data.generation.harness import generate_dataset
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:

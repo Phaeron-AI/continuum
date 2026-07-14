@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from torch.utils.data import Subset
 
-from engine.data.frame_dataset import FrameDataset
+from engine.data.loading.frame_dataset import FrameDataset
 
 def split_dataset(dataset: FrameDataset, eval_fraction: float = 0.1, seed: int = 0)-> tuple[Subset, Subset]:
   if not 0.0 < eval_fraction < 1.0:

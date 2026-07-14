@@ -8,7 +8,7 @@ import torch
 from torch import Tensor
 from torch.utils.data import Dataset
 
-from engine.data.token_cache import load_cache_manifest
+from engine.data.tokens.token_cache import load_cache_manifest
 
 
 class SequenceDataset(Dataset):

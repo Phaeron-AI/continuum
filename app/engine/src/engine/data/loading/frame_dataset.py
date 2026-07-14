@@ -7,8 +7,8 @@ import h5py
 from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
 
-from engine.data.frame_index import FrameLocator, build_frame_index
-from engine.data.transforms import frame_to_tensor
+from engine.data.loading.frame_index import FrameLocator, build_frame_index
+from engine.data.storage.transforms import frame_to_tensor
 
 class FrameDataset(Dataset):
   def __init__(self, dataset_dir: Path | str, target_size: tuple[int, int] = (64, 64))-> None:
