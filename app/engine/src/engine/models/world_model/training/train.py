@@ -9,8 +9,8 @@ from torch.utils.data import DataLoader
 from torch.amp.grad_scaler import GradScaler
 
 from engine.models.device import resolve_device
-from engine.models.world_model.checkpoint import save_checkpoint
-from engine.models.world_model.world_model import WorldModel
+from engine.models.world_model.model.checkpoint import save_checkpoint
+from engine.models.world_model.model.world_model import WorldModel
 
 logger = getLogger(__name__)
 

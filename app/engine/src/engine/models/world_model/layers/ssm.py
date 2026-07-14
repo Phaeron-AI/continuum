@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from engine.models.world_model.mixer import SequenceMixer
+from engine.models.world_model.layers.mixer import SequenceMixer
 
 class SelectiveSSM(SequenceMixer):
   def __init__(self, d_model: int, d_state: int = 16)-> None:

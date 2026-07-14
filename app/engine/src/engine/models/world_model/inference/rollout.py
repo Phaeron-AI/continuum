@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 from torch import Tensor
 
-from engine.models.world_model.world_model import WorldModel
+from engine.models.world_model.model.world_model import WorldModel
 
 def _pick(logits: Tensor, temperature: float)-> Tensor:
   if temperature <= 0.0:

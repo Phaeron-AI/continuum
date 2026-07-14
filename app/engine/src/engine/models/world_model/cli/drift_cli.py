@@ -7,10 +7,10 @@ from pathlib import Path
 import h5py
 import torch
 
-from engine.data.token_cache import load_cache_manifest
+from engine.data.tokens.token_cache import load_cache_manifest
 from engine.models.tokenizer.frozen import FrozenTokenizer
-from engine.models.world_model.checkpoint import build_world_model_from_checkpoint
-from engine.models.world_model.drift import DriftReport, evaluate_drift
+from engine.models.world_model.model.checkpoint import build_world_model_from_checkpoint
+from engine.models.world_model.inference.drift import DriftReport, evaluate_drift
 
 logger = logging.getLogger(__name__)
 

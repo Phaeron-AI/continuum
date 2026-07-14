@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 import torch
 from torch import Tensor
 
-from engine.models.world_model.world_model import WorldModel
-from engine.models.world_model.rollout import rollout
+from engine.models.world_model.model.world_model import WorldModel
+from engine.models.world_model.inference.rollout import rollout
 
 @dataclass
 class DriftReport:

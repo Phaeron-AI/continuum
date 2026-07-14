@@ -27,14 +27,14 @@ import numpy as np
 import yaml
 from torch.utils.data import DataLoader, Subset
 
-from engine.data.sequence_dataset import SequenceDataset
-from engine.data.token_cache import load_cache_manifest
+from engine.data.tokens.sequence_dataset import SequenceDataset
+from engine.data.tokens.token_cache import load_cache_manifest
 from engine.envs.config_registry import dataclass_factory
-from engine.models.world_model.checkpoint import build_world_model_from_checkpoint
-from engine.models.world_model.config import WorldModelConfig
-from engine.models.world_model.evaluate import WMEvalReport, evaluate_world_model
-from engine.models.world_model.train import TrainConfig, train_world_model
-from engine.models.world_model.world_model import WorldModel
+from engine.models.world_model.model.checkpoint import build_world_model_from_checkpoint
+from engine.models.world_model.model.config import WorldModelConfig
+from engine.models.world_model.training.evaluate import WMEvalReport, evaluate_world_model
+from engine.models.world_model.training.train import TrainConfig, train_world_model
+from engine.models.world_model.model.world_model import WorldModel
 
 logger = logging.getLogger(__name__)
 

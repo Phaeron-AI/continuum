@@ -8,8 +8,8 @@ import torch
 from torch.optim.optimizer import Optimizer
 from torch.amp.grad_scaler import GradScaler
 
-from engine.models.world_model.world_model import WorldModel
-from engine.models.world_model.config import WorldModelConfig
+from engine.models.world_model.model.world_model import WorldModel
+from engine.models.world_model.model.config import WorldModelConfig
 
 def save_checkpoint(
   path: Path | str,

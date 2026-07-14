@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch.nn as nn
 from torch import Tensor
 
-from engine.models.world_model.mixer import SequenceMixer
+from engine.models.world_model.layers.mixer import SequenceMixer
 
 class SSMBlock(nn.Module):
   def __init__(self, mixer: SequenceMixer, d_model: int, ffn_mult: int = 4)-> None:

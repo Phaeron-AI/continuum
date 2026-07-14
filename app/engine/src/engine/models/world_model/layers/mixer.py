@@ -29,7 +29,7 @@ def make_mixer(kind: str, d_model: int, **kwargs: object)-> SequenceMixer:
   if kind == "identity":
     return IdentityMixer(d_model=d_model)
   if kind == "ssm":
-    from engine.models.world_model.ssm import SelectiveSSM
+    from engine.models.world_model.layers.ssm import SelectiveSSM
 
     d_state = int(kwargs.get("d_state", 16))  # type: ignore
     return SelectiveSSM(d_model, d_state=d_state)

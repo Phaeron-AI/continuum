@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from engine.models.device import resolve_device
-from engine.models.world_model.world_model import WorldModel
+from engine.models.world_model.model.world_model import WorldModel
 
 @dataclass
 class WMEvalReport:
