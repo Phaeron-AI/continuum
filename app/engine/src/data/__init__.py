@@ -29,8 +29,8 @@ from data.storage import (
   tensor_to_frame
 )
 from data.tokens import (
-  build_token_cache, 
-  _encode_frames, 
+  build_token_cache,
+  load_cache_manifest, 
   SequenceDataset
 )
 
@@ -47,7 +47,6 @@ __all__ = [
   "_CoverageAccumulator", 
   "EpisodeMetadata",
   "build_token_cache", 
-  "_encode_frames", 
   "SequenceDataset",
   "DatasetManifest", 
   "StepRecord", 
@@ -61,5 +60,6 @@ __all__ = [
   "build_frame_index",
   "has_manifest",
   "FrameLocator",
-  "split_dataset"
+  "split_dataset",
+  "load_cache_manifest"
 ]
