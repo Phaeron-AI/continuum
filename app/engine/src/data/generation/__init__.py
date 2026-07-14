@@ -21,5 +21,5 @@ __all__ = [
   "generate_dataset", 
   "CoverageReport", 
   "_CoverageAccumulator", 
-  "EpisodeMetadata"
+  "EpisodeMetadata",
 ]
