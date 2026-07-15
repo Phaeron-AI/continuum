@@ -6,6 +6,8 @@ from models.tokenizer.frozen import FrozenTokenizer
 from models.tokenizer.spec import TokenSpec
 from models.tokenizer.tokenizer import Tokenizer
 from models.tokenizer.train import TrainConfig, train_tokenizer, TrainState
+from models.tokenizer.modules import Encoder, Decoder, FSQ, round_ste
+
 
 __all__ = [
   # Configuration
@@ -31,4 +33,10 @@ __all__ = [
   "save_checkpoint",
   "load_checkpoint",
   "build_tokenizer_from_checkpoint",
+
+  # Modules
+  "Encoder",
+  "Decoder",
+  "FSQ",
+  "round_ste"
 ]

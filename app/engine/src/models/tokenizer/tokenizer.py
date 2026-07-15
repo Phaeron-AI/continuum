@@ -3,11 +3,11 @@ from __future__ import annotations
 import torch
 from torch import Tensor, nn
 
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.modules.decoder import Decoder
-from engine.models.tokenizer.modules.encoder import Encoder
-from engine.models.tokenizer.modules.quantizer import FSQ
-from engine.models.tokenizer.spec import TokenSpec
+from models.tokenizer.config import TokenizerConfig
+from models.tokenizer.modules.decoder import Decoder
+from models.tokenizer.modules.encoder import Encoder
+from models.tokenizer.modules.quantizer import FSQ
+from models.tokenizer.spec import TokenSpec
 
 
 class Tokenizer(nn.Module):
