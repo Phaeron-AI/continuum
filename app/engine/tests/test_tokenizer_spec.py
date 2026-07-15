@@ -10,13 +10,14 @@ from pathlib import Path
 import pytest
 import torch
 
-from engine.models.tokenizer.checkpoint import (
+from models.tokenizer import (
     build_tokenizer_from_checkpoint,
     load_checkpoint,
+    TokenizerConfig,
+    Tokenizer,
+    TrainConfig,
+    train_tokenizer
 )
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.tokenizer import Tokenizer
-from engine.models.tokenizer.train import TrainConfig, train_tokenizer
 
 
 def _tiny_tokenizer() -> Tokenizer:

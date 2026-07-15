@@ -16,11 +16,8 @@ from __future__ import annotations
 import pytest
 import torch
 
-from engine.models.tokenizer.spec import TokenSpec
-from engine.models.world_model.block import SSMBlock
-from engine.models.world_model.config import WorldModelConfig
-from engine.models.world_model.mixer import make_mixer
-from engine.models.world_model.world_model import WorldModel
+from models.tokenizer import TokenSpec
+from models.world_model import SSMBlock, WorldModelConfig, make_mixer, WorldModel
 
 
 def _cfg(**kw: object) -> WorldModelConfig:

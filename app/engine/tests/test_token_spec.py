@@ -10,8 +10,8 @@ import math
 
 import pytest
 
-from engine.models.device import resolve_device
-from engine.models.tokenizer.spec import TokenSpec
+from models.device import resolve_device
+from models.tokenizer import TokenSpec
 
 
 def test_vocab_size_is_product_of_levels() -> None:

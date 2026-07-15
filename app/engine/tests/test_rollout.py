@@ -19,13 +19,17 @@ from __future__ import annotations
 import pytest
 import torch
 
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.frozen import FrozenTokenizer
-from engine.models.tokenizer.tokenizer import Tokenizer
-from engine.models.world_model.config import WorldModelConfig
-from engine.models.world_model.drift import DriftReport, evaluate_drift
-from engine.models.world_model.rollout import rollout, rollout_to_frames
-from engine.models.world_model.world_model import WorldModel
+from models.tokenizer import (
+    TokenizerConfig,
+    FrozenTokenizer,
+    Tokenizer
+)
+from models.world_model import (
+    WorldModelConfig,
+    DriftReport, evaluate_drift,
+    rollout, rollout_to_frames,
+    WorldModel
+)
 
 TPF = 64  # 8x8 token grid
 

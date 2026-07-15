@@ -18,14 +18,15 @@ from pathlib import Path
 import pytest
 import torch
 
-from engine.models.world_model.checkpoint import (
+from models.world_model import (
     build_world_model_from_checkpoint,
     load_checkpoint,
+    WorldModelConfig,
+    WMEvalReport,
+    evaluate_world_model,
+    TrainConfig, train_world_model,
+    WorldModel
 )
-from engine.models.world_model.config import WorldModelConfig
-from engine.models.world_model.evaluate import WMEvalReport, evaluate_world_model
-from engine.models.world_model.train import TrainConfig, train_world_model
-from engine.models.world_model.world_model import WorldModel
 
 VOCAB = 32
 ACTIONS = 5

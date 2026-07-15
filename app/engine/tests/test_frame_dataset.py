@@ -10,11 +10,11 @@ import numpy as np
 import pytest
 import torch
 
-from engine.data.frame_dataset import FrameDataset, make_frame_dataloader
-from engine.data.frame_index import build_frame_index
-from engine.data.harness import GenerationConfig, generate_dataset
-from engine.data.transforms import frame_to_tensor, tensor_to_frame
-from engine.envs.grid2d.config import Grid2DConfig
+from data.loading.frame_dataset import FrameDataset, make_frame_dataloader
+from data.loading.frame_index import build_frame_index
+from data.generation.harness import GenerationConfig, generate_dataset
+from data.storage.transforms import frame_to_tensor, tensor_to_frame
+from envs.grid2d.config import Grid2DConfig
 
 
 @pytest.fixture

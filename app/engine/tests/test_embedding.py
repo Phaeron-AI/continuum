@@ -15,15 +15,15 @@ from pathlib import Path
 import pytest
 import torch
 
-from engine.data.harness import GenerationConfig, generate_dataset
-from engine.data.sequence_dataset import SequenceDataset
-from engine.data.token_cache import build_token_cache
-from engine.envs.grid2d.config import Grid2DConfig
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.frozen import FrozenTokenizer
-from engine.models.tokenizer.tokenizer import Tokenizer
-from engine.models.world_model.embedding import TokenEmbedding
-from engine.models.world_model.ssm import SelectiveSSM
+from data.generation.harness import GenerationConfig, generate_dataset
+from data.tokens.sequence_dataset import SequenceDataset
+from data.tokens.token_cache import build_token_cache
+from envs.grid2d.config import Grid2DConfig
+from models.tokenizer.config import TokenizerConfig
+from models.tokenizer.frozen import FrozenTokenizer
+from models.tokenizer.tokenizer import Tokenizer
+from models.world_model.layers.embedding import TokenEmbedding
+from models.world_model.layers.ssm import SelectiveSSM
 
 
 def test_embedding_shape_and_total_vocab() -> None:

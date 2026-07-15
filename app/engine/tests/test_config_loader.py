@@ -8,9 +8,9 @@ from pathlib import Path
 
 import pytest
 
-from engine.data.config_loader import load_generation_config
-from engine.data.harness import GenerationConfig
-from engine.envs.grid2d.config import Grid2DConfig
+from data.generation.config_loader import load_generation_config
+from data.generation.harness import GenerationConfig
+from envs.grid2d.config import Grid2DConfig
 
 
 def _write(path: Path, text: str) -> Path:
@@ -118,7 +118,7 @@ env: {}
 
 def test_cli_end_to_end(tmp_path: Path) -> None:
     """The CLI runs a full generation with overrides and produces a dataset."""
-    from engine.data.cli import main
+    from data.cli.generation import main
 
     cfg_path = _write(
         tmp_path / "c.yaml",
@@ -149,7 +149,7 @@ env:
 
 
 def test_cli_bad_config_returns_error_code(tmp_path: Path) -> None:
-    from engine.data.cli import main
+    from data.cli.generation import main
 
     rc = main(["--config", str(tmp_path / "nope.yaml")])
     assert rc == 1

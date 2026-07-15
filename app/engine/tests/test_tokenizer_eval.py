@@ -11,13 +11,15 @@ from pathlib import Path
 import pytest
 import torch
 
-from engine.models.tokenizer.checkpoint import save_checkpoint
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.evaluate import EvalReport, evaluate_tokenizer
-from engine.models.tokenizer.frozen import FrozenTokenizer
-from engine.models.tokenizer.modules.quantizer import FSQ
-from engine.models.tokenizer.tokenizer import Tokenizer
-
+from models.tokenizer import (
+  FSQ, 
+  Tokenizer, 
+  FrozenTokenizer, 
+  TokenizerConfig, 
+  EvalReport, 
+  evaluate_tokenizer, 
+  save_checkpoint
+)
 
 def _tiny() -> Tokenizer:
     return Tokenizer(TokenizerConfig(levels=(4, 4, 4), hidden=16))
@@ -75,7 +77,7 @@ def test_eval_report_metrics() -> None:
 
 def test_perfect_reconstruction_gives_high_psnr() -> None:
     """PSNR sanity: near-zero MSE -> large dB."""
-    from engine.models.tokenizer.evaluate import _psnr_from_mse
+    from models.tokenizer.evaluate import _psnr_from_mse
 
     assert _psnr_from_mse(0.0) == float("inf")
     assert _psnr_from_mse(1e-6) > 40.0

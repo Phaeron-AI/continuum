@@ -17,8 +17,7 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-from engine.models.world_model.mixer import SequenceMixer
-from engine.models.world_model.ssm import SelectiveSSM
+from models.world_model import SequenceMixer, SelectiveSSM
 
 
 def _ssm(d_model: int = 4, d_state: int = 3) -> SelectiveSSM:

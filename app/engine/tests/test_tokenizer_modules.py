@@ -11,9 +11,7 @@ from __future__ import annotations
 
 import torch
 
-from engine.models.tokenizer.modules.decoder import Decoder
-from engine.models.tokenizer.modules.encoder import Encoder
-from engine.models.tokenizer.modules.quantizer import FSQ, round_ste
+from models.tokenizer import Encoder, Decoder, FSQ, round_ste
 
 
 def test_encoder_downsamples_to_grid() -> None:

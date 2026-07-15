@@ -8,9 +8,11 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from engine.data.harness import CoverageReport, GenerationConfig, generate_dataset
-from engine.data.storage import iterate_episodes, load_manifest
-from engine.envs.grid2d.config import Grid2DConfig
+from data import (
+    CoverageReport, GenerationConfig, generate_dataset,
+    iterate_episodes, load_manifest
+)
+from envs import Grid2DConfig
 
 
 def _small_config(output_dir: Path, **overrides) -> GenerationConfig:
@@ -99,8 +101,8 @@ def test_unknown_env_rejected(tmp_path: Path) -> None:
 
 
 def test_registries_reject_duplicate_registration() -> None:
-    from engine.envs.registry import register_env
-    from engine.envs.policies.registry import register_policy
+    from envs.registry import register_env
+    from envs.policies.registry import register_policy
 
     with pytest.raises(ValueError):
         register_env("grid2d", lambda cfg: None)  # type: ignore

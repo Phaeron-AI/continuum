@@ -14,14 +14,18 @@ from pathlib import Path
 import pytest
 import torch
 
-from engine.data.harness import GenerationConfig, generate_dataset
-from engine.data.sequence_dataset import SequenceDataset
-from engine.data.token_cache import build_token_cache, load_cache_manifest
-from engine.envs.grid2d.config import Grid2DConfig
-from engine.models.tokenizer.config import TokenizerConfig
-from engine.models.tokenizer.frozen import FrozenTokenizer
-from engine.models.tokenizer.tokenizer import Tokenizer
-from engine.models.world_model.mixer import IdentityMixer, make_mixer
+from data import (
+  GenerationConfig, generate_dataset,
+  SequenceDataset,
+  build_token_cache, load_cache_manifest,
+)
+from envs import Grid2DConfig
+from models.tokenizer import (
+  TokenizerConfig,
+  FrozenTokenizer,
+  Tokenizer
+)
+from models.world_model import IdentityMixer, make_mixer
 
 
 # ---- mixer interface ----
