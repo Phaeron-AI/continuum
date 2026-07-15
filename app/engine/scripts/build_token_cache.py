@@ -1,6 +1,6 @@
 import sys
 
-from engine.data.token_cache_cli import main
+from data.cli.token_cache import main
 
 if __name__ == "__main__":
   sys.exit(main())

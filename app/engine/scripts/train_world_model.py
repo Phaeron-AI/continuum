@@ -1,6 +1,6 @@
 import sys
 
-from engine.models.world_model.cli import main
+from src.models.world_model.cli.train_cli import main
 
 if __name__ == "__main__":
   sys.exit(main())
