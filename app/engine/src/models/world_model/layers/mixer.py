@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-import torch
-from torch import Tensor, nn as nn
+from torch import Tensor
+from torch import nn as nn
+
 
 class SequenceMixer(nn.Module, ABC):
   def __init__(self, d_model: int)-> None:

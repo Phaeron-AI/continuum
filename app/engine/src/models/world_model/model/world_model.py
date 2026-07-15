@@ -5,10 +5,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from models.world_model.model.config import WorldModelConfig
-from models.world_model.layers.embedding import TokenEmbedding
 from models.world_model.layers.block import SSMBlock
+from models.world_model.layers.embedding import TokenEmbedding
 from models.world_model.layers.mixer import make_mixer
+from models.world_model.model.config import WorldModelConfig
+
 
 class WorldModel(nn.Module):
   def __init__(self, config: WorldModelConfig)-> None:

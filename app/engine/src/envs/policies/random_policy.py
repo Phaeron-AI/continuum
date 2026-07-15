@@ -4,6 +4,7 @@ import numpy as np
 
 from .base import Policy
 
+
 class RandomPolicy(Policy):
   def __init__(self, num_actions: int, rng: np.random.Generator | None = None):
     super().__init__()

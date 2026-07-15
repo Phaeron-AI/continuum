@@ -3,9 +3,10 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
+
 
 class Action(IntEnum):
   UP = 0
@@ -40,7 +41,7 @@ class Env(ABC):
   env_version: str
 
   @abstractmethod
-  def reset(self, seed: Optional[int] = None)-> np.ndarray:...
+  def reset(self, seed: int | None = None)-> np.ndarray:...
 
   @abstractmethod
   def step(self, action: Action)-> StepResult:...

@@ -5,8 +5,8 @@ from logging import getLogger
 from pathlib import Path
 
 import torch
-from torch.utils.data import DataLoader
 from torch.amp.grad_scaler import GradScaler
+from torch.utils.data import DataLoader
 
 from models.device import resolve_device
 from models.world_model.model.checkpoint import save_checkpoint

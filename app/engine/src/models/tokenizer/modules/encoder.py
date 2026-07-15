@@ -3,6 +3,7 @@ from __future__ import annotations
 import torch.nn as nn
 from torch import Tensor
 
+
 class Encoder(nn.Module):
   def __init__(self, in_channels: int = 3, hidden: int = 64, latent_dim: int = 5)-> None:
     super().__init__()

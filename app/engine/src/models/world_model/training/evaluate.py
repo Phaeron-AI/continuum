@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader
 from models.device import resolve_device
 from models.world_model.model.world_model import WorldModel
 
+
 @dataclass
 class WMEvalReport:
   ce_loss: float

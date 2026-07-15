@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from models.tokenizer.spec import TokenSpec
 
+
 @dataclass(frozen=True)
 class TokenizerConfig:
   levels: tuple[int, ...] = (8, 8, 8, 5, 5)

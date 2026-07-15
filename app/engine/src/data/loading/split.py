@@ -5,7 +5,12 @@ from torch.utils.data import Subset
 
 from data.loading.frame_dataset import FrameDataset
 
-def split_dataset(dataset: FrameDataset, eval_fraction: float = 0.1, seed: int = 0)-> tuple[Subset, Subset]:
+
+def split_dataset(
+  dataset: FrameDataset, 
+  eval_fraction: float = 0.1, 
+  seed: int = 0
+) -> tuple[Subset,Subset]:
   if not 0.0 < eval_fraction < 1.0:
     raise ValueError(f"eval_fraction must be in (0, 1), got {eval_fraction}")
   

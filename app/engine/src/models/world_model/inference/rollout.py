@@ -5,6 +5,7 @@ from torch import Tensor
 
 from models.world_model.model.world_model import WorldModel
 
+
 def _pick(logits: Tensor, temperature: float)-> Tensor:
   if temperature <= 0.0:
     return logits.argmax(dim=-1)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+
 import numpy as np
 
 from envs.policies.base import Policy

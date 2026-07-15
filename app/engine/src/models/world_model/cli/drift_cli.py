@@ -9,8 +9,8 @@ import torch
 
 from data import load_cache_manifest
 from models.tokenizer import FrozenTokenizer
-from models.world_model.model import build_world_model_from_checkpoint
 from models.world_model.inference import DriftReport, evaluate_drift
+from models.world_model.model import build_world_model_from_checkpoint
 
 logger = logging.getLogger(__name__)
 

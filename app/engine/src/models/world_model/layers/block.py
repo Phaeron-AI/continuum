@@ -5,6 +5,7 @@ from torch import Tensor
 
 from models.world_model.layers.mixer import SequenceMixer
 
+
 class SSMBlock(nn.Module):
   def __init__(self, mixer: SequenceMixer, d_model: int, ffn_mult: int = 4)-> None:
     super().__init__()

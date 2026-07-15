@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Protocol, Optional
+from typing import Protocol
 
 import numpy as np
 
 from ..base import Action, Env, ObservationSpec, StepResult
 from .config import Grid2DConfig
+
 
 class Renderer(Protocol):
   def render(self, agent_pos: tuple[int, int], obstacles: list[np.ndarray])-> np.ndarray:...
@@ -21,7 +22,7 @@ class _Grid2DState:
 
 class Grid2DEnv(Env):
   env_version = "v1"
-  def __init__(self, config: Optional[Grid2DConfig] = None, renderer: Optional[Renderer] = None)-> None:
+  def __init__(self, config: Grid2DConfig | None = None, renderer: Renderer | None = None)-> None:
     self._config = config or Grid2DConfig()
     self.observation_spec = ObservationSpec(
       height=self._config.canvas_size,
@@ -34,7 +35,7 @@ class Grid2DEnv(Env):
       renderer = Grid2DRenderer(self._config)
 
     self._renderer = renderer
-    self._state: Optional[_Grid2DState] = None
+    self._state: _Grid2DState | None = None
   
   @property
   def config(self)-> Grid2DConfig:

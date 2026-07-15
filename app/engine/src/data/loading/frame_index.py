@@ -7,6 +7,7 @@ import h5py
 
 from data.storage.storage import __MANIFEST_FILENAME__
 
+
 @dataclass(frozen=True)
 class FrameLocator:
   shard_path: str

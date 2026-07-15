@@ -1,15 +1,16 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
-from dataclasses import asdict
 
 import torch
-from torch.optim.optimizer import Optimizer
 from torch.amp.grad_scaler import GradScaler
+from torch.optim.optimizer import Optimizer
 
-from models.world_model.model.world_model import WorldModel
 from models.world_model.model.config import WorldModelConfig
+from models.world_model.model.world_model import WorldModel
+
 
 def save_checkpoint(
   path: Path | str,

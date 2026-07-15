@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 import numpy as np
+
 
 @dataclass(frozen=True)
 class StepRecord:
@@ -40,9 +40,9 @@ class DatasetManifest:
   seed_start: int
   seed_end: int
   created_at: str = field(
-    default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    default_factory=lambda: datetime.now(UTC).isoformat()
   )
-  git_commit: Optional[str] = None
+  git_commit: str | None = None
   notes: str = ""
 
   def to_dict(self)-> dict:
@@ -67,7 +67,7 @@ class DatasetManifest:
     }
   
   @classmethod
-  def from_dict(cls, data: dict)-> "DatasetManifest":
+  def from_dict(cls, data: dict)-> DatasetManifest:
     obs = data["observation_spec"]
     seed_start, seed_end = data["seed_range"]
     return cls(

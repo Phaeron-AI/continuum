@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader
 from models.device import resolve_device
 from models.tokenizer.tokenizer import Tokenizer
 
+
 @dataclass
 class EvalReport:
   recon_mse: float

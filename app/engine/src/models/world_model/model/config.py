@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from models.tokenizer.spec import TokenSpec
 
+
 @dataclass(frozen=True)
 class WorldModelConfig:
   vocab_size: int

@@ -1,0 +1,1003 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\__init__.py:1:1
+   |
+ 1 | / from data.cli import run_build
+ 2 | | from data.generation import (
+ 3 | |   GenerationConfig, 
+ 4 | |   _episode_iterator, 
+ 5 | |   _current_git_commit, 
+ 6 | |   _build_manifest, 
+ 7 | |   _generate_one_episode, 
+ 8 | |   generate_dataset,
+ 9 | |   load_generation_config, 
+10 | |   CoverageReport, 
+11 | |   _CoverageAccumulator, 
+12 | |   EpisodeMetadata
+13 | | )
+14 | | from data.loading import (
+15 | |   build_frame_index,
+16 | |   has_manifest,
+17 | |   split_dataset,
+18 | |   FrameLocator
+19 | | )
+20 | | from data.storage import (
+21 | |   DatasetManifest, 
+22 | |   StepRecord, 
+23 | |   EpisodeMetadata,
+24 | |   ShardWriter,
+25 | |   iterate_episodes,
+26 | |   write_manifest,
+27 | |   load_manifest,
+28 | |   frame_to_tensor,
+29 | |   tensor_to_frame
+30 | | )
+31 | | from data.tokens import (
+32 | |   build_token_cache,
+33 | |   load_cache_manifest, 
+34 | |   SequenceDataset
+35 | | )
+   | |_^
+36 |
+37 |   __all__ = [
+   |
+help: Organize imports
+
+F811 Redefinition of unused `EpisodeMetadata` from line 12
+  --> src\data\__init__.py:23:3
+   |
+21 |   DatasetManifest, 
+22 |   StepRecord, 
+23 |   EpisodeMetadata,
+   |   ^^^^^^^^^^^^^^^ `EpisodeMetadata` redefined here
+24 |   ShardWriter,
+25 |   iterate_episodes,
+   |
+  ::: src\data\__init__.py:12:3
+   |
+10 |   CoverageReport, 
+11 |   _CoverageAccumulator, 
+12 |   EpisodeMetadata
+   |   --------------- previous definition of `EpisodeMetadata` here
+13 | )
+14 | from data.loading import (
+   |
+help: Remove definition: `EpisodeMetadata`
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\generation\__init__.py:1:1
+   |
+ 1 | / from data.generation.config_loader import load_generation_config
+ 2 | | from data.generation.harness import (
+ 3 | |   GenerationConfig, 
+ 4 | |   _episode_iterator, 
+ 5 | |   _current_git_commit, 
+ 6 | |   _build_manifest, 
+ 7 | |   _generate_one_episode, 
+ 8 | |   generate_dataset, 
+ 9 | |   CoverageReport, 
+10 | |   _CoverageAccumulator, 
+11 | |   EpisodeMetadata
+12 | | )
+   | |_^
+13 |
+14 |   __all__ = [
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\generation\config_loader.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from pathlib import Path
+ 4 | | from typing import Any
+ 5 | |
+ 6 | | import yaml
+ 7 | |
+ 8 | | from data.generation.harness import GenerationConfig
+ 9 | | from envs.config_registry import dataclass_factory, make_env_config
+   | |___________________________________________________________________^
+10 |
+11 |   def load_generation_config(path: Path | str) -> GenerationConfig:
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\loading\__init__.py:1:1
+  |
+1 | / from data.loading.frame_dataset import FrameDataset, make_frame_dataloader
+2 | | from data.loading.frame_index import build_frame_index, has_manifest, FrameLocator
+3 | | from data.loading.split import split_dataset
+  | |____________________________________________^
+4 |
+5 |   __all__ = [
+  |
+help: Organize imports
+
+F401 `data.loading.frame_dataset.FrameDataset` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+ --> src\data\loading\__init__.py:1:40
+  |
+1 | from data.loading.frame_dataset import FrameDataset, make_frame_dataloader
+  |                                        ^^^^^^^^^^^^
+2 | from data.loading.frame_index import build_frame_index, has_manifest, FrameLocator
+3 | from data.loading.split import split_dataset
+  |
+help: Add unused import `FrameDataset` to __all__
+
+F401 `data.loading.frame_dataset.make_frame_dataloader` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+ --> src\data\loading\__init__.py:1:54
+  |
+1 | from data.loading.frame_dataset import FrameDataset, make_frame_dataloader
+  |                                                      ^^^^^^^^^^^^^^^^^^^^^
+2 | from data.loading.frame_index import build_frame_index, has_manifest, FrameLocator
+3 | from data.loading.split import split_dataset
+  |
+help: Add unused import `make_frame_dataloader` to __all__
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\loading\frame_dataset.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import os
+ 4 | | from pathlib import Path
+ 5 | |
+ 6 | | import h5py
+ 7 | | from torch import Tensor
+ 8 | | from torch.utils.data import Dataset, DataLoader
+ 9 | |
+10 | | from data.loading.frame_index import FrameLocator, build_frame_index
+11 | | from data.storage.transforms import frame_to_tensor
+   | |___________________________________________________^
+12 |
+13 |   class FrameDataset(Dataset):
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\loading\frame_index.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from dataclasses import dataclass
+ 4 | | from pathlib import Path
+ 5 | |
+ 6 | | import h5py
+ 7 | |
+ 8 | | from data.storage.storage import __MANIFEST_FILENAME__
+   | |______________________________________________________^
+ 9 |
+10 |   @dataclass(frozen=True)
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\loading\split.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import numpy as np
+4 | | from torch.utils.data import Subset
+5 | |
+6 | | from data.loading.frame_dataset import FrameDataset
+  | |___________________________________________________^
+7 |
+8 |   def split_dataset(dataset: FrameDataset, eval_fraction: float = 0.1, seed: int = 0)-> tuple[Subset, Subset]:
+  |
+help: Organize imports
+
+E501 Line too long (108 > 100)
+  --> src\data\loading\split.py:8:101
+   |
+ 6 | from data.loading.frame_dataset import FrameDataset
+ 7 |
+ 8 | def split_dataset(dataset: FrameDataset, eval_fraction: float = 0.1, seed: int = 0)-> tuple[Subset, Subset]:
+   |                                                                                                     ^^^^^^^^
+ 9 |   if not 0.0 < eval_fraction < 1.0:
+10 |     raise ValueError(f"eval_fraction must be in (0, 1), got {eval_fraction}")
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\storage\__init__.py:1:1
+  |
+1 | / from data.storage.schema import DatasetManifest, StepRecord, EpisodeMetadata
+2 | | from data.storage.storage import ShardWriter, iterate_episodes, write_manifest, load_manifest
+3 | | from data.storage.transforms import frame_to_tensor, tensor_to_frame
+  | |____________________________________________________________________^
+4 |
+5 |   __all__ = [
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\storage\schema.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from dataclasses import dataclass, field
+4 | | from datetime import datetime, timezone
+5 | | from typing import Optional
+6 | |
+7 | | import numpy as np
+  | |__________________^
+8 |
+9 |   @dataclass(frozen=True)
+  |
+help: Organize imports
+
+UP017 [*] Use `datetime.UTC` alias
+  --> src\data\storage\schema.py:43:42
+   |
+41 |   seed_end: int
+42 |   created_at: str = field(
+43 |     default_factory=lambda: datetime.now(timezone.utc).isoformat()
+   |                                          ^^^^^^^^^^^^
+44 |   )
+45 |   git_commit: Optional[str] = None
+   |
+help: Convert to `datetime.UTC` alias
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\data\storage\schema.py:45:15
+   |
+43 |     default_factory=lambda: datetime.now(timezone.utc).isoformat()
+44 |   )
+45 |   git_commit: Optional[str] = None
+   |               ^^^^^^^^^^^^^
+46 |   notes: str = ""
+   |
+help: Convert to `X | None`
+
+UP037 [*] Remove quotes from type annotation
+  --> src\data\storage\schema.py:70:36
+   |
+69 |   @classmethod
+70 |   def from_dict(cls, data: dict)-> "DatasetManifest":
+   |                                    ^^^^^^^^^^^^^^^^^
+71 |     obs = data["observation_spec"]
+72 |     seed_start, seed_end = data["seed_range"]
+   |
+help: Remove quotes
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\data\storage\storage.py:22:25
+   |
+20 |     self._shard_index = 0
+21 |     self._episodes_in_current_shard = 0
+22 |     self._current_file: Optional[h5py.File] = None
+   |                         ^^^^^^^^^^^^^^^^^^^
+23 |     self._shard_paths: list[Path] = []
+   |
+help: Convert to `X | None`
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\storage\transforms.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import numpy as np
+4 | | import torch
+5 | | from torch import Tensor
+6 | | import torch.nn.functional as F
+  | |_______________________________^
+7 |
+8 |   def frame_to_tensor(frame: np.ndarray, target_size: tuple[int, int] = (64, 64))-> Tensor:
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\data\tokens\__init__.py:1:1
+  |
+1 | / from data.tokens.token_cache import build_token_cache, load_cache_manifest
+2 | | from data.tokens.sequence_dataset import SequenceDataset
+  | |________________________________________________________^
+3 |
+4 |   __all__ = ["build_token_cache", "load_cache_manifest", "SequenceDataset"]
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\tokens\sequence_dataset.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import os
+ 4 | | from pathlib import Path
+ 5 | |
+ 6 | | import h5py
+ 7 | | import torch
+ 8 | | from torch import Tensor
+ 9 | | from torch.utils.data import Dataset
+10 | |
+11 | | from engine.data.tokens.token_cache import load_cache_manifest
+   | |______________________________________________________________^
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\data\tokens\token_cache.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import json
+ 4 | | from pathlib import Path
+ 5 | |
+ 6 | | import h5py
+ 7 | | import torch
+ 8 | | import numpy as np
+ 9 | |
+10 | | from data.storage.storage import iterate_episodes
+11 | | from data.storage.transforms import frame_to_tensor
+12 | | from models.tokenizer.frozen import FrozenTokenizer
+   | |___________________________________________________^
+13 |
+14 |   __CACHE_MANIFEST__ = "token_cache_manifest.json"
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\__init__.py:3:1
+  |
+1 |   # from .policies import Policy, RandomPolicy
+2 |   # from .grid2d import Grid2DConfig, Grid2DEnv, Grid2DRenderer, _Grid2DState
+3 | / from envs.grid2d import Grid2DConfig, Grid2DEnv, Grid2DRenderer, Renderer
+4 | | from envs.policies import Policy, RandomPolicy, register_policy, registry
+5 | | from envs.base import Action, ObservationSpec, StepResult, Env
+6 | | from envs.config_registry import dataclass_factory, register_env_config, make_env_config
+7 | | from envs.registry import register_env, make_env
+  | |________________________________________________^
+8 |
+9 |   __all__ = [
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\envs\base.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from abc import ABC, abstractmethod
+ 4 | | from dataclasses import dataclass
+ 5 | | from enum import IntEnum
+ 6 | | from typing import Any, Optional
+ 7 | |
+ 8 | | import numpy as np
+   | |__________________^
+ 9 |
+10 |   class Action(IntEnum):
+   |
+help: Organize imports
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\envs\base.py:43:25
+   |
+42 |   @abstractmethod
+43 |   def reset(self, seed: Optional[int] = None)-> np.ndarray:...
+   |                         ^^^^^^^^^^^^^
+44 |
+45 |   @abstractmethod
+   |
+help: Convert to `X | None`
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\grid2d\__init__.py:1:1
+  |
+1 | / from envs.grid2d.config import Grid2DConfig
+2 | | from envs.grid2d.renderer import Grid2DRenderer
+3 | | from envs.grid2d.env import Grid2DEnv, Renderer
+  | |_______________________________________________^
+4 |
+5 |   __all__ = ["Grid2DConfig", "Renderer", "Grid2DRenderer", "Grid2DEnv"]
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\grid2d\config.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from dataclasses import dataclass
+  | |_________________________________^
+4 |
+5 |   @dataclass(frozen=True)
+  |
+help: Organize imports
+
+UP037 [*] Remove quotes from type annotation
+  --> src\envs\grid2d\config.py:26:36
+   |
+25 |   @classmethod
+26 |   def from_dict(cls, data: dict)-> "Grid2DConfig":
+   |                                    ^^^^^^^^^^^^^^
+27 |     return cls(**data)
+   |
+help: Remove quotes
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\envs\grid2d\env.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from dataclasses import dataclass
+ 4 | | from typing import Protocol, Optional
+ 5 | |
+ 6 | | import numpy as np
+ 7 | |
+ 8 | | from ..base import Action, Env, ObservationSpec, StepResult
+ 9 | | from .config import Grid2DConfig
+   | |________________________________^
+10 |
+11 |   class Renderer(Protocol):
+   |
+help: Organize imports
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\envs\grid2d\env.py:24:30
+   |
+22 | class Grid2DEnv(Env):
+23 |   env_version = "v1"
+24 |   def __init__(self, config: Optional[Grid2DConfig] = None, renderer: Optional[Renderer] = None)-> None:
+   |                              ^^^^^^^^^^^^^^^^^^^^^^
+25 |     self._config = config or Grid2DConfig()
+26 |     self.observation_spec = ObservationSpec(
+   |
+help: Convert to `X | None`
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\envs\grid2d\env.py:24:71
+   |
+22 | class Grid2DEnv(Env):
+23 |   env_version = "v1"
+24 |   def __init__(self, config: Optional[Grid2DConfig] = None, renderer: Optional[Renderer] = None)-> None:
+   |                                                                       ^^^^^^^^^^^^^^^^^^
+25 |     self._config = config or Grid2DConfig()
+26 |     self.observation_spec = ObservationSpec(
+   |
+help: Convert to `X | None`
+
+E501 Line too long (104 > 100)
+  --> src\envs\grid2d\env.py:24:101
+   |
+22 | class Grid2DEnv(Env):
+23 |   env_version = "v1"
+24 |   def __init__(self, config: Optional[Grid2DConfig] = None, renderer: Optional[Renderer] = None)-> None:
+   |                                                                                                     ^^^^
+25 |     self._config = config or Grid2DConfig()
+26 |     self.observation_spec = ObservationSpec(
+   |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\envs\grid2d\env.py:37:18
+   |
+36 |     self._renderer = renderer
+37 |     self._state: Optional[_Grid2DState] = None
+   |                  ^^^^^^^^^^^^^^^^^^^^^^
+38 |   
+39 |   @property
+   |
+help: Convert to `X | None`
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\grid2d\renderer.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import os
+4 | | import numpy as np
+5 | |
+6 | | from .config import Grid2DConfig
+  | |________________________________^
+7 |
+8 |   BACKGROUND_COLOR = (20, 20, 20)
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\policies\base.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from abc import ABC, abstractmethod
+4 | |
+5 | | import numpy as np
+  | |__________________^
+6 |
+7 |   class Policy(ABC):
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\policies\random_policy.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import numpy as np
+4 | |
+5 | | from .base import Policy
+  | |________________________^
+6 |
+7 |   class RandomPolicy(Policy):
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\envs\policies\registry.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from collections.abc import Callable
+4 | | import numpy as np
+5 | |
+6 | | from envs.policies.base import Policy
+  | |_____________________________________^
+7 |
+8 |   PolicyFactory = Callable[[int, np.random.Generator], Policy]
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\device.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import torch
+  | |____________^
+4 |
+5 |   def resolve_device(device: str = "auto")-> torch.device:
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\tokenizer\__init__.py:1:1
+  |
+1 | / from models.tokenizer.checkpoint import save_checkpoint, load_checkpoint, build_tokenizer_from_checkpoint
+2 | | from models.tokenizer.cli import DataConfig, run_training
+3 | | from models.tokenizer.config import TokenizerConfig
+4 | | from models.tokenizer.evaluate import EvalReport, evaluate_tokenizer
+5 | | from models.tokenizer.frozen import FrozenTokenizer
+6 | | from models.tokenizer.spec import TokenSpec
+7 | | from models.tokenizer.tokenizer import Tokenizer
+8 | | from models.tokenizer.train import TrainConfig, train_tokenizer, TrainState
+9 | | from models.tokenizer.modules import Encoder, Decoder, FSQ, round_ste
+  | |_____________________________________________________________________^
+  |
+help: Organize imports
+
+E501 Line too long (105 > 100)
+ --> src\models\tokenizer\__init__.py:1:101
+  |
+1 | from models.tokenizer.checkpoint import save_checkpoint, load_checkpoint, build_tokenizer_from_checkpoint
+  |                                                                                                     ^^^^^
+2 | from models.tokenizer.cli import DataConfig, run_training
+3 | from models.tokenizer.config import TokenizerConfig
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\tokenizer\config.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from dataclasses import dataclass
+4 | |
+5 | | from models.tokenizer.spec import TokenSpec
+  | |___________________________________________^
+6 |
+7 |   @dataclass(frozen=True)
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\tokenizer\evaluate.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import math
+ 4 | | from dataclasses import dataclass
+ 5 | |
+ 6 | | import torch
+ 7 | | import torch.nn.functional as F
+ 8 | | from torch.utils.data import DataLoader
+ 9 | |
+10 | | from models.device import resolve_device
+11 | | from models.tokenizer.tokenizer import Tokenizer
+   | |________________________________________________^
+12 |
+13 |   @dataclass
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\tokenizer\frozen.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from pathlib import Path
+ 4 | |
+ 5 | | import torch
+ 6 | | from torch import Tensor
+ 7 | |
+ 8 | | from models.tokenizer.spec import TokenSpec
+ 9 | | from models.tokenizer.tokenizer import Tokenizer
+10 | | from models.tokenizer.checkpoint import build_tokenizer_from_checkpoint
+   | |_______________________________________________________________________^
+11 |
+12 |   class FrozenTokenizer:
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\tokenizer\modules\__init__.py:1:1
+  |
+1 | / from models.tokenizer.modules.encoder import Encoder
+2 | | from models.tokenizer.modules.decoder import Decoder
+3 | | from models.tokenizer.modules.quantizer import FSQ, round_ste
+  | |_____________________________________________________________^
+4 |
+5 |   __all__ = [
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\tokenizer\modules\decoder.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from torch import nn
+4 | | from torch import Tensor
+  | |________________________^
+5 |
+6 |   class Decoder(nn.Module):
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\tokenizer\modules\encoder.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import torch.nn as nn
+4 | | from torch import Tensor
+  | |________________________^
+5 |
+6 |   class Encoder(nn.Module):
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\tokenizer\train.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import logging
+ 4 | | from dataclasses import dataclass
+ 5 | | from pathlib import Path
+ 6 | |
+ 7 | | import torch
+ 8 | | import torch.nn.functional as F
+ 9 | | from torch.utils.data import DataLoader
+10 | | from torch.amp.grad_scaler import GradScaler
+11 | |
+12 | | from models.device import resolve_device
+13 | | from models.tokenizer.tokenizer import Tokenizer
+14 | | from models.tokenizer.checkpoint import save_checkpoint
+   | |_______________________________________________________^
+15 |
+16 |   logger = logging.getLogger(__name__)
+   |
+help: Organize imports
+
+E501 Line too long (130 > 100)
+  --> src\models\tokenizer\train.py:45:101
+   |
+43 |     yield from loader
+44 |
+45 | def train_tokenizer(tokenizer: Tokenizer, loader: DataLoader, config: TrainConfig, resume_state: dict | None = None)-> TrainState:
+   |                                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+46 |   device = resolve_device(config.device)
+47 |   tokenizer.to(device)
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\__init__.py:1:1
+   |
+ 1 | / from models.world_model.cli import run_training, run_drift_eval
+ 2 | | from models.world_model.inference import (
+ 3 | |   DriftReport,
+ 4 | |   evaluate_drift,
+ 5 | |   rollout,
+ 6 | |   rollout_to_frames
+ 7 | | )
+ 8 | | from models.world_model.layers import (
+ 9 | |   SSMBlock,
+10 | |   TokenEmbedding,
+11 | |   SequenceMixer,
+12 | |   IdentityMixer,
+13 | |   make_mixer,
+14 | |   SelectiveSSM
+15 | | )
+16 | | from models.world_model.model import (
+17 | |   save_checkpoint,
+18 | |   load_checkpoint,
+19 | |   build_world_model_from_checkpoint,
+20 | |   WorldModelConfig,
+21 | |   WorldModel
+22 | | )
+23 | | from models.world_model.training import (
+24 | |   WMEvalReport,
+25 | |   evaluate_world_model,
+26 | |   train_world_model,
+27 | |   TrainConfig, 
+28 | |   TrainState
+29 | | )
+   | |_^
+30 |
+31 |   __all__ = [
+   |
+help: Organize imports
+
+F401 `models.world_model.cli.train_cli.DataConfig` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+ --> src\models\world_model\cli\__init__.py:2:46
+  |
+1 | from models.world_model.cli.drift_cli import run_drift_eval
+2 | from models.world_model.cli.train_cli import DataConfig, run_training
+  |                                              ^^^^^^^^^^
+3 |
+4 | __all__ = ["run_drift_eval", "run_training"]
+  |
+help: Add unused import `DataConfig` to __all__
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\cli\drift_cli.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import argparse
+ 4 | | import logging
+ 5 | | from pathlib import Path
+ 6 | |
+ 7 | | import h5py
+ 8 | | import torch
+ 9 | |
+10 | | from data import load_cache_manifest
+11 | | from models.tokenizer import FrozenTokenizer
+12 | | from models.world_model.model import build_world_model_from_checkpoint
+13 | | from models.world_model.inference import DriftReport, evaluate_drift
+   | |____________________________________________________________________^
+14 |
+15 |   logger = logging.getLogger(__name__)
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\cli\train_cli.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import argparse
+ 4 | | import dataclasses
+ 5 | | import logging
+ 6 | | from dataclasses import dataclass
+ 7 | | from pathlib import Path
+ 8 | |
+ 9 | | import numpy as np
+10 | | import yaml
+11 | | from torch.utils.data import DataLoader, Subset
+12 | |
+13 | | from data import SequenceDataset, load_cache_manifest
+14 | | from envs import dataclass_factory
+15 | | from models.world_model.model import WorldModelConfig, WorldModel, build_world_model_from_checkpoint
+16 | | from models.world_model.training import TrainConfig, train_world_model, WMEvalReport, evaluate_world_model
+   | |__________________________________________________________________________________________________________^
+   |
+help: Organize imports
+
+E501 Line too long (106 > 100)
+  --> src\models\world_model\cli\train_cli.py:16:101
+   |
+14 | from envs import dataclass_factory
+15 | from models.world_model.model import WorldModelConfig, WorldModel, build_world_model_from_checkpoint
+16 | from models.world_model.training import TrainConfig, train_world_model, WMEvalReport, evaluate_world_model
+   |                                                                                                     ^^^^^^
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\inference\rollout.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import torch
+4 | | from torch import Tensor
+5 | |
+6 | | from models.world_model.model.world_model import WorldModel
+  | |___________________________________________________________^
+7 |
+8 |   def _pick(logits: Tensor, temperature: float)-> Tensor:
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\layers\__init__.py:1:1
+  |
+1 | / from models.world_model.layers.block import SSMBlock
+2 | | from models.world_model.layers.embedding import TokenEmbedding
+3 | | from models.world_model.layers.mixer import SequenceMixer, IdentityMixer, make_mixer
+4 | | from models.world_model.layers.ssm import SelectiveSSM
+  | |______________________________________________________^
+5 |
+6 |   __all__ = [
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\layers\block.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | import torch.nn as nn
+4 | | from torch import Tensor
+5 | |
+6 | | from models.world_model.layers.mixer import SequenceMixer
+  | |_________________________________________________________^
+7 |
+8 |   class SSMBlock(nn.Module):
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\layers\mixer.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from abc import ABC, abstractmethod
+4 | |
+5 | | import torch
+6 | | from torch import Tensor, nn as nn
+  | |__________________________________^
+7 |
+8 |   class SequenceMixer(nn.Module, ABC):
+  |
+help: Organize imports
+
+F401 [*] `torch` imported but unused
+ --> src\models\world_model\layers\mixer.py:5:8
+  |
+3 | from abc import ABC, abstractmethod
+4 |
+5 | import torch
+  |        ^^^^^
+6 | from torch import Tensor, nn as nn
+  |
+help: Remove unused import: `torch`
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\layers\ssm.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import torch
+ 4 | | import torch.nn as nn
+ 5 | | import torch.nn.functional as F
+ 6 | | from torch import Tensor
+ 7 | |
+ 8 | | from models.world_model.layers.mixer import SequenceMixer
+   | |_________________________________________________________^
+ 9 |
+10 |   class SelectiveSSM(SequenceMixer):
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\model\__init__.py:1:1
+  |
+1 | / from models.world_model.model.checkpoint import (
+2 | |   save_checkpoint, 
+3 | |   load_checkpoint, 
+4 | |   build_world_model_from_checkpoint
+5 | | )
+6 | | from models.world_model.model.config import WorldModelConfig
+7 | | from models.world_model.model.world_model import WorldModel
+  | |___________________________________________________________^
+8 |
+9 |   __all__ = [
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\model\checkpoint.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from pathlib import Path
+ 4 | | from typing import Any
+ 5 | | from dataclasses import asdict
+ 6 | |
+ 7 | | import torch
+ 8 | | from torch.optim.optimizer import Optimizer
+ 9 | | from torch.amp.grad_scaler import GradScaler
+10 | |
+11 | | from models.world_model.model.world_model import WorldModel
+12 | | from models.world_model.model.config import WorldModelConfig
+   | |____________________________________________________________^
+13 |
+14 |   def save_checkpoint(
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\models\world_model\model\config.py:1:1
+  |
+1 | / from __future__ import annotations
+2 | |
+3 | | from dataclasses import dataclass
+4 | |
+5 | | from models.tokenizer.spec import TokenSpec
+  | |___________________________________________^
+6 |
+7 |   @dataclass(frozen=True)
+  |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\model\world_model.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import torch
+ 4 | | import torch.nn as nn
+ 5 | | import torch.nn.functional as F
+ 6 | | from torch import Tensor
+ 7 | |
+ 8 | | from models.world_model.model.config import WorldModelConfig
+ 9 | | from models.world_model.layers.embedding import TokenEmbedding
+10 | | from models.world_model.layers.block import SSMBlock
+11 | | from models.world_model.layers.mixer import make_mixer
+   | |______________________________________________________^
+12 |
+13 |   class WorldModel(nn.Module):
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\training\evaluate.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | import math
+ 4 | | from dataclasses import dataclass
+ 5 | |
+ 6 | | import torch
+ 7 | | import torch.nn.functional as F
+ 8 | | from torch.utils.data import DataLoader
+ 9 | |
+10 | | from models.device import resolve_device
+11 | | from models.world_model.model.world_model import WorldModel
+   | |___________________________________________________________^
+12 |
+13 |   @dataclass
+   |
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\models\world_model\training\train.py:1:1
+   |
+ 1 | / from __future__ import annotations
+ 2 | |
+ 3 | | from dataclasses import dataclass
+ 4 | | from logging import getLogger
+ 5 | | from pathlib import Path
+ 6 | |
+ 7 | | import torch
+ 8 | | from torch.utils.data import DataLoader
+ 9 | | from torch.amp.grad_scaler import GradScaler
+10 | |
+11 | | from models.device import resolve_device
+12 | | from models.world_model.model.checkpoint import save_checkpoint
+13 | | from models.world_model.model.world_model import WorldModel
+   | |___________________________________________________________^
+14 |
+15 |   logger = getLogger(__name__)
+   |
+help: Organize imports
+
+Found 64 errors.
+[*] 55 fixable with the `--fix` option.

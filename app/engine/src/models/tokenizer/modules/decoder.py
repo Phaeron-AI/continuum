@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from torch import nn
-from torch import Tensor
+from torch import Tensor, nn
+
 
 class Decoder(nn.Module):
   def __init__(

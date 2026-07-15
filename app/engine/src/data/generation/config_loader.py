@@ -8,6 +8,7 @@ import yaml
 from data.generation.harness import GenerationConfig
 from envs.config_registry import dataclass_factory, make_env_config
 
+
 def load_generation_config(path: Path | str) -> GenerationConfig:
   path = Path(path)
   if not path.exists():

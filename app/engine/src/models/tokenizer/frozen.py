@@ -5,9 +5,10 @@ from pathlib import Path
 import torch
 from torch import Tensor
 
+from models.tokenizer.checkpoint import build_tokenizer_from_checkpoint
 from models.tokenizer.spec import TokenSpec
 from models.tokenizer.tokenizer import Tokenizer
-from models.tokenizer.checkpoint import build_tokenizer_from_checkpoint
+
 
 class FrozenTokenizer:
   def __init__(self, tokenzier: Tokenizer)-> None:

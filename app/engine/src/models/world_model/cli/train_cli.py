@@ -12,9 +12,13 @@ from torch.utils.data import DataLoader, Subset
 
 from data import SequenceDataset, load_cache_manifest
 from envs import dataclass_factory
-from models.world_model.model import WorldModelConfig, WorldModel, build_world_model_from_checkpoint
-from models.world_model.training import TrainConfig, train_world_model, WMEvalReport, evaluate_world_model
-
+from models.world_model.model import WorldModel, WorldModelConfig, build_world_model_from_checkpoint
+from models.world_model.training import (
+  TrainConfig,
+  WMEvalReport,
+  evaluate_world_model,
+  train_world_model,
+)
 
 logger = logging.getLogger(__name__)
 

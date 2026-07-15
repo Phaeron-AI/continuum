@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import numpy as np
 import torch
-from torch import Tensor
 import torch.nn.functional as F
+from torch import Tensor
+
 
 def frame_to_tensor(frame: np.ndarray, target_size: tuple[int, int] = (64, 64))-> Tensor:
   if frame.ndim != 3:

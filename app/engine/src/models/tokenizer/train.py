@@ -6,12 +6,12 @@ from pathlib import Path
 
 import torch
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
 from torch.amp.grad_scaler import GradScaler
+from torch.utils.data import DataLoader
 
 from models.device import resolve_device
-from models.tokenizer.tokenizer import Tokenizer
 from models.tokenizer.checkpoint import save_checkpoint
+from models.tokenizer.tokenizer import Tokenizer
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,12 @@ def _infinite(loader: DataLoader):
   while True:
     yield from loader
 
-def train_tokenizer(tokenizer: Tokenizer, loader: DataLoader, config: TrainConfig, resume_state: dict | None = None)-> TrainState:
+def train_tokenizer(
+  tokenizer: Tokenizer, 
+  loader: DataLoader, 
+  config: TrainConfig, 
+  resume_state: dict | None = None
+)-> TrainState:
   device = resolve_device(config.device)
   tokenizer.to(device)
   tokenizer.train()

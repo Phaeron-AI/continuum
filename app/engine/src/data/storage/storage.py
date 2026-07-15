@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Optional
 
 import h5py
 import numpy as np
@@ -19,7 +18,7 @@ class ShardWriter:
     self._episodes_per_shard = episodes_per_shard
     self._shard_index = 0
     self._episodes_in_current_shard = 0
-    self._current_file: Optional[h5py.File] = None
+    self._current_file: h5py.File | None = None
     self._shard_paths: list[Path] = []
   
   def add_episode(self, frames: np.ndarray, actions: np.ndarray, metadata: EpisodeMetadata)-> None:

@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 
 import h5py
-import torch
 import numpy as np
+import torch
 
 from data.storage.storage import iterate_episodes
 from data.storage.transforms import frame_to_tensor
