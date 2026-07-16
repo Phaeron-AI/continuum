@@ -1,0 +1,318 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\Phaeron\continuum\app\engine
+configfile: pyproject.toml
+collected 7 items
+
+tests\test_world_model_step.py FFFF.FF                                   [100%]
+
+================================== FAILURES ===================================
+_______________________ test_model_step_matches_forward _______________________
+
+    def test_model_step_matches_forward() -> None:
+      """Recurrent generation through the full stack must equal parallel forward."""
+      m = _model(n_layers=3).eval()
+      ids = torch.randint(0, 37, (2, 15))  # total_vocab = 32 + 5
+      with torch.no_grad():
+        parallel = m(ids)
+>       recurrent = _run_recurrent(m, ids)
+                    ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_world_model_step.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_world_model_step.py:32: in _run_recurrent
+    logits, state = m.step(ids[:, t], state)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:84: in step
+    state = self.init_generation_state(token.shape[0], x.device, x.dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=16, out_features=4, bias=False)
+  (C_proj): Linear(in_features=16, out_features=4, bias=False)
+  (delta_proj): Linear(in_features=16, out_features=16, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+_______________ test_model_step_matches_forward_across_configs ________________
+
+    @pytest.mark.slow
+    def test_model_step_matches_forward_across_configs() -> None:
+      """Equivalence across layer counts and dims — guards per-layer state
+      threading bugs that only surface at particular depths."""
+      for n_layers, d_model, d_state, length in [(1, 8, 2, 6), (4, 16, 8, 12), (2, 24, 4, 9)]:
+        torch.manual_seed(1)
+        m = WorldModel(
+          WorldModelConfig(
+            vocab_size=20, num_actions=4, d_model=d_model,
+            d_state=d_state, n_layers=n_layers,
+          )
+        ).eval()
+        ids = torch.randint(0, 24, (2, length))
+        with torch.no_grad():
+>         assert torch.allclose(m(ids), _run_recurrent(m, ids), atol=1e-4), (
+                                        ^^^^^^^^^^^^^^^^^^^^^^
+            f"mismatch at n_layers={n_layers} d_model={d_model} L={length}"
+          )
+
+tests\test_world_model_step.py:66: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_world_model_step.py:32: in _run_recurrent
+    logits, state = m.step(ids[:, t], state)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:84: in step
+    state = self.init_generation_state(token.shape[0], x.device, x.dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=8, out_features=2, bias=False)
+  (C_proj): Linear(in_features=8, out_features=2, bias=False)
+  (delta_proj): Linear(in_features=8, out_features=8, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+_____________________ test_generation_state_is_per_layer ______________________
+
+    def test_generation_state_is_per_layer() -> None:
+      """The state is a list with one entry per block."""
+      m = _model(n_layers=3)
+>     state = m.init_generation_state(2, torch.device("cpu"), torch.float32)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_world_model_step.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=16, out_features=4, bias=False)
+  (C_proj): Linear(in_features=16, out_features=4, bias=False)
+  (delta_proj): Linear(in_features=16, out_features=16, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+______________________________ test_step_shapes _______________________________
+
+    def test_step_shapes() -> None:
+      m = _model(n_layers=2)
+      token = torch.randint(0, 37, (3,))
+>     logits, state = m.step(token, None)
+                      ^^^^^^^^^^^^^^^^^^^
+
+tests\test_world_model_step.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\models\world_model\model\world_model.py:84: in step
+    state = self.init_generation_state(token.shape[0], x.device, x.dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=16, out_features=4, bias=False)
+  (C_proj): Linear(in_features=16, out_features=4, bias=False)
+  (delta_proj): Linear(in_features=16, out_features=16, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+_______________________ test_state_carries_across_steps _______________________
+
+    def test_state_carries_across_steps() -> None:
+      """Same token twice gives different logits — the second sees accumulated
+      state through every layer. Proof the state threads, not resets."""
+      m = _model(n_layers=2).eval()
+      token = torch.randint(0, 32, (1,))
+      with torch.no_grad():
+>       l1, s1 = m.step(token, None)
+                 ^^^^^^^^^^^^^^^^^^^
+
+tests\test_world_model_step.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\models\world_model\model\world_model.py:84: in step
+    state = self.init_generation_state(token.shape[0], x.device, x.dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=16, out_features=4, bias=False)
+  (C_proj): Linear(in_features=16, out_features=4, bias=False)
+  (delta_proj): Linear(in_features=16, out_features=16, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+____________________ test_action_token_updates_all_layers _____________________
+
+    def test_action_token_updates_all_layers() -> None:
+      """An action token, stepped in, must advance every layer's state — its
+      effect has to be present before the next frame's tokens are generated
+      (stage 02 pitfall: skipping this silently drops conditioning)."""
+      m = _model(n_layers=3).eval()
+      vocab = m.config.vocab_size
+      action_tok = torch.tensor([vocab + 2])  # a valid action id
+    
+      with torch.no_grad():
+>       state0 = m.init_generation_state(1, torch.device("cpu"), torch.float32)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_world_model_step.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\models\world_model\model\world_model.py:74: in init_generation_state
+    return [
+src\models\world_model\model\world_model.py:75: in <listcomp>
+    block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = SelectiveSSM(
+  (B_proj): Linear(in_features=16, out_features=4, bias=False)
+  (C_proj): Linear(in_features=16, out_features=4, bias=False)
+  (delta_proj): Linear(in_features=16, out_features=16, bias=True)
+)
+name = 'init_state'
+
+    def __getattr__(self, name: str) -> Union[Tensor, "Module"]:
+        if "_parameters" in self.__dict__:
+            _parameters = self.__dict__["_parameters"]
+            if name in _parameters:
+                return _parameters[name]
+        if "_buffers" in self.__dict__:
+            _buffers = self.__dict__["_buffers"]
+            if name in _buffers:
+                return _buffers[name]
+        if "_modules" in self.__dict__:
+            modules = self.__dict__["_modules"]
+            if name in modules:
+                return modules[name]
+>       raise AttributeError(
+            f"'{type(self).__name__}' object has no attribute '{name}'"
+        )
+E       AttributeError: 'SelectiveSSM' object has no attribute 'init_state'
+
+.venv\Lib\site-packages\torch\nn\modules\module.py:1967: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_world_model_step.py::test_model_step_matches_forward - Attr...
+FAILED tests/test_world_model_step.py::test_model_step_matches_forward_across_configs
+FAILED tests/test_world_model_step.py::test_generation_state_is_per_layer - A...
+FAILED tests/test_world_model_step.py::test_step_shapes - AttributeError: 'Se...
+FAILED tests/test_world_model_step.py::test_state_carries_across_steps - Attr...
+FAILED tests/test_world_model_step.py::test_action_token_updates_all_layers
+========================= 6 failed, 1 passed in 1.63s =========================

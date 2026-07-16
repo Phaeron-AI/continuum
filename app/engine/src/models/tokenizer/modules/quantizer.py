@@ -19,8 +19,7 @@ D-vector at each cell into a single integer token in [0, prod(levels)).
 from __future__ import annotations
 
 import torch
-from torch import Tensor
-from torch import nn
+from torch import Tensor, nn
 
 
 def round_ste(z: Tensor) -> Tensor:
