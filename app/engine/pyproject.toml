@@ -1,0 +1,57 @@
+[project]
+name = "engine"
+version = "0.0.1"
+description = "Mamba-based world model engine: tokenized visual states, action-conditioned sequence prediction, staged toward real-time inference."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "pygame>=2.5",
+    "h5py>=3.10",
+    "pyyaml>=6.0",
+    "torch>=2.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "pyright>=1.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/data", "src/models", "src/envs"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+markers = [
+    "slow: end-to-end training / exhaustive tests; excluded by pytest -m 'not slow'",
+]
+
+[tool.ruff]
+indent-width = 2
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.format]
+indent-style = "space"
+
+[tool.ruff.lint]
+# E,F  = pycodestyle/pyflakes — undefined names, unused vars
+# I    = import sorting
+# B    = flake8-bugbear — likely-bug patterns
+# UP   = pyupgrade — modern syntax
+# RET  = flake8-return — return-statement consistency (silent-None guard)
+select = ["E", "F", "I", "B", "UP", "RET"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+extraPaths = ["src"]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"

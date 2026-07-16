@@ -1,0 +1,26 @@
+model:
+  d_model: 256
+  d_state: 16
+  n_layers: 4
+  ffn_mult: 4
+  mixer: ssm
+
+train:
+  max_steps: 20000
+  lr: 0.0003
+  log_every: 100
+  checkpoint_every: 2000
+  device: auto
+  amp: true
+  grad_clip: 1.0
+  checkpoint_dir: checkpoints/world_model/phase2_v1
+
+data:
+  cache_dir: data/token_cache/phase1_v1
+  context_frames: 4
+  num_actions: 5
+  batch_size: 32
+  num_workers: 4
+  eval_fraction: 0.1
+  split_seed: 0
+  eval_on_finish: true
