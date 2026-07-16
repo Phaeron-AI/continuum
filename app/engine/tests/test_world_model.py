@@ -16,8 +16,8 @@ from __future__ import annotations
 import pytest
 import torch
 
-from models.tokenizer import TokenSpec
-from models.world_model import SSMBlock, WorldModelConfig, make_mixer, WorldModel
+from models.tokenizer import TokenSpec  # type: ignore[imports]
+from models.world_model import SSMBlock, WorldModelConfig, make_mixer, WorldModel   # type: ignore[imports]
 
 
 def _cfg(**kw: object) -> WorldModelConfig:

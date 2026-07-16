@@ -19,10 +19,11 @@ D-vector at each cell into a single integer token in [0, prod(levels)).
 from __future__ import annotations
 
 import torch
+from torch import Tensor
 from torch import nn
 
 
-def round_ste(z: torch.Tensor) -> torch.Tensor:
+def round_ste(z: Tensor) -> Tensor:
   return z + (torch.round(z) - z).detach()
 
 
@@ -48,7 +49,7 @@ class FSQ(nn.Module):
       size *= level
     return size
 
-  def _bound(self, z: torch.Tensor, eps: float = 1e-3) -> torch.Tensor:
+  def _bound(self, z: Tensor, eps: float = 1e-3) -> Tensor:
     """Bound z into the grid range with tanh, plus the atanh half-step
     shift for even L so round() lands symmetrically (matches reference)."""
     levels = self._levels.to(z.device)
@@ -61,25 +62,41 @@ class FSQ(nn.Module):
     shift = torch.atanh(offset / half_l)
     return torch.tanh(z + shift) * half_l - offset
 
-  def quantize(self, z: torch.Tensor) -> torch.Tensor:
+  def quantize(self, z: Tensor) -> Tensor:
     """Bound then round-with-STE, normalized onto a stable width for the
     decoder. Channel dim must be last (..., D)."""
     quantized = round_ste(self._bound(z))
     half_width = self._levels.to(z.device) // 2 # type: ignore
     return quantized / half_width
 
-  def _scale_and_shift(self, z_normalized: torch.Tensor) -> torch.Tensor:
+  def _scale_and_shift(self, z_normalized: Tensor) -> Tensor:
     half_width = self._levels.to(z_normalized.device) // 2  # type: ignore
     return z_normalized * half_width + half_width
 
-  def codes_to_indices(self, z_normalized: torch.Tensor) -> torch.Tensor:
+  def codes_to_indices(self, z_normalized: Tensor) -> Tensor:
     """Map quantized codes (normalized) to integer token ids via
     mixed-radix encoding. Input (..., D) -> output (...) long."""
     digits = self._scale_and_shift(z_normalized).round().long()
     basis = self._basis.to(z_normalized.device)
     return (digits * basis).sum(dim=-1) # type: ignore
+  
+  def indices_to_codes(self, indices: Tensor) -> Tensor:
+    """Inverse of codes_to_indices: integer token ids -> normalized codes.
 
-  def forward(self, z: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+    Mixed-radix decode each id into per-dimension digits in [0, level), then
+    un-shift back onto the normalized grid the decoder expects — the exact
+    inverse of _scale_and_shift (digit = z_norm * half_width + half_width).
+    Input (...) long -> output (..., D).
+    """
+    basis = self._basis.to(indices.device)          # (D,) long
+    levels = self._levels.to(indices.device).long()  # (D,) # type: ignore
+    # recover digits in [0, level) by mixed-radix division
+    digits = (indices.unsqueeze(-1) // basis) % levels  # (..., D)  # type: ignore
+    # invert _scale_and_shift:  z_norm = (digit - half_width) / half_width
+    half_width = levels // 2
+    return (digits.float() - half_width.float()) / half_width.float()
+
+  def forward(self, z: Tensor) -> tuple[Tensor, Tensor]:
     """z: (B, D, H, W). Returns (quantized (B, D, H, W), indices (B, H, W)).
 
     Moves the channel dim last for per-dimension quantization, then back.

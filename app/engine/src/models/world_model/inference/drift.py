@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 import torch
 from torch import Tensor
 
-from models.world_model.inference import rollout
+from models.world_model.inference.rollout import rollout
 from models.world_model.model import WorldModel
 
 

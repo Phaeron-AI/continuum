@@ -5,7 +5,7 @@ from pathlib import Path
 
 import h5py
 import torch
-from engine.data.tokens.token_cache import load_cache_manifest
+from data.tokens.token_cache import load_cache_manifest
 from torch import Tensor
 from torch.utils.data import Dataset
 

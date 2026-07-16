@@ -7,7 +7,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 
-from .storage.schema import DatasetManifest, EpisodeMetadata
+from data.storage.schema import DatasetManifest, EpisodeMetadata
 
 __MANIFEST_FILENAME__ = "manifest.json"
 
