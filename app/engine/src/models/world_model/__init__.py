@@ -9,6 +9,7 @@ from models.world_model.layers import (
   make_mixer,
 )
 from models.world_model.model import (
+  GenerationState,
   WorldModel,
   WorldModelConfig,
   build_world_model_from_checkpoint,
@@ -48,6 +49,7 @@ __all__ = [
   "build_world_model_from_checkpoint",
   "WorldModelConfig",
   "WorldModel",
+  "GenerationState",
 
   # Training
   "WMEvalReport",
