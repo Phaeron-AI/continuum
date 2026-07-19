@@ -55,3 +55,6 @@ include = ["src", "tests", "scripts"]
 extraPaths = ["src"]
 pythonVersion = "3.11"
 typeCheckingMode = "standard"
+
+[tool.ruff.lint.per-file-ignores]
+"src/models/world_model/server/*.py" = ["B008"]
