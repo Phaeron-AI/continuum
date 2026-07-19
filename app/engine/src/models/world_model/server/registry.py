@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from models.world_model.session import GenerationSession
 
+
 @dataclass
 class SessionEntry:
   session: GenerationSession
