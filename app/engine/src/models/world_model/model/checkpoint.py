@@ -25,7 +25,7 @@ def save_checkpoint(
   checkpoint = {
     "step": step,
     "model_state": model.state_dict(),
-    "optimizer_state": optimizer.state_dict(),  # type: ignore
+    "optimizer_state": optimizer.state_dict() if optimizer is not None else None,
     "scaler_state": scaler.state_dict() if scaler is not None else None,
     "config": asdict(model.config),
     # The guard: which tokenizer's token ids this model speaks.

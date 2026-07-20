@@ -1,6 +1,14 @@
 from __future__ import annotations
 
+import os
+
 from torch import Tensor, nn
+
+# Range-checking token ids means reading their min/max, which forces a
+# device-to-host sync on every forward — fine for debugging, ruinous on a
+# hot GPU training loop. Off by default; opt in with CONTINUUM_CHECK_TOKEN_IDS=1.
+# nn.Embedding still faults loudly on an out-of-range id regardless.
+_CHECK_IDS = os.environ.get("CONTINUUM_CHECK_TOKEN_IDS", "0") == "1"
 
 
 class TokenEmbedding(nn.Module):
@@ -20,7 +28,7 @@ class TokenEmbedding(nn.Module):
     """ids: (B, L) long -> (B, L, d_model) float."""
     if ids.dim() != 2:
       raise ValueError(f"expected (B, L) token ids, got {tuple(ids.shape)}")
-    if int(ids.max()) >= self.total_vocab or int(ids.min()) < 0:
+    if _CHECK_IDS and (int(ids.max()) >= self.total_vocab or int(ids.min()) < 0):
       raise ValueError(
         f"token id out of range [0, {self.total_vocab}): "
         f"got min={int(ids.min())}, max={int(ids.max())}"

@@ -75,7 +75,7 @@ class WorldModel(nn.Module):
       block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
     ]
 
-  def step(self, token: Tensor, state: list | None) -> tuple[Tensor, GenerationState]:
+  def step(self, token: Tensor, state: GenerationState | None) -> tuple[Tensor, GenerationState]:
     if token.dim() != 1:
       raise ValueError(f"step expects (B,) token ids, got {tuple(token.shape)}")
 
