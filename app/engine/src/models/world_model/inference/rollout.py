@@ -6,10 +6,30 @@ from torch import Tensor
 from models.world_model.model.world_model import WorldModel
 
 
-def _pick(logits: Tensor, temperature: float)-> Tensor:
+def _pick(
+  logits: Tensor,
+  temperature: float,
+  top_k: int = 0,
+  top_p: float = 0.0,
+)-> Tensor:
   if temperature <= 0.0:
     return logits.argmax(dim=-1)
-  probs = torch.softmax(logits / temperature, dim=-1)
+
+  logits = logits / temperature
+
+  if top_k > 0:
+    k = min(top_k, logits.shape[-1])
+    kth = logits.topk(k, dim=-1).values[..., -1, None]
+    logits = logits.masked_fill(logits < kth, float("-inf"))
+
+  if top_p > 0.0:
+    ordered, order = torch.sort(logits, dim=-1, descending=True)
+    cumulative = torch.softmax(ordered, dim=-1).cumsum(dim=-1)
+    remove = cumulative - torch.softmax(ordered, dim=-1) >= top_p
+    ordered = ordered.masked_fill(remove, float("-inf"))
+    logits = torch.empty_like(logits).scatter_(-1, order, ordered)
+
+  probs = torch.softmax(logits, dim=-1)
   return torch.multinomial(probs, num_samples=1).squeeze(-1)
 
 @torch.no_grad()
@@ -19,7 +39,9 @@ def rollout(
   actions: Tensor,
   num_frames: int,
   tokens_per_frame: int,
-  temperature: float = 0.0
+  temperature: float = 0.0,
+  top_k: int = 0,
+  top_p: float = 0.0,
 )-> Tensor:
   model.eval()
   vocab = model.config.vocab_size
@@ -39,7 +61,7 @@ def rollout(
     frame_tokens: list[Tensor] = []
     for _ in range(tokens_per_frame):
       logits = model(context)[:, -1]  # (B, vocab) — next-token logits
-      nxt = _pick(logits, temperature)  # (B,)
+      nxt = _pick(logits, temperature, top_k=top_k, top_p=top_p)  # (B,)
       frame_tokens.append(nxt)
       # Feed the model's OWN prediction back in. This is the step where
       # error begins to compound (stage 07).
