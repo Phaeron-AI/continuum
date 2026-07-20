@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from torch import Tensor
 
-def positional_action_ids(ids: Tensor, vocab_size: Tensor)-> Tensor:
+def positional_action_ids(ids: Tensor, vocab_size: int)-> Tensor:
   if ids.dim() != 2:
     raise ValueError(f"Expected: (B, L); got: {tuple(ids.shape)}")
   
