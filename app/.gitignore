@@ -1,2 +1,7 @@
 # Model Checkpoints
 checkpoints/
+
+.pytest_cache/
+
+# text documents
+*.txt

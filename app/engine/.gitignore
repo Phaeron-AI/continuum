@@ -5,3 +5,9 @@ venv/
 # Python Bytecode
 __pycache__/
 .pytest_cache/
+
+# Ruff Checks/Cache
+.ruff_cache/
+
+# Text Files
+*.txt

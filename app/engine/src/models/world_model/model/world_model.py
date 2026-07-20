@@ -10,6 +10,7 @@ from models.world_model.layers.embedding import TokenEmbedding
 from models.world_model.layers.mixer import make_mixer
 from models.world_model.model.config import WorldModelConfig
 
+GenerationState = list[Tensor | None]
 
 class WorldModel(nn.Module):
   def __init__(self, config: WorldModelConfig)-> None:
@@ -63,3 +64,30 @@ class WorldModel(nn.Module):
   def predict_next(self, ids: Tensor)-> Tensor:
     logits = self(ids)[:, -1]  # (B, vocab_size) — last position
     return logits.argmax(dim=-1)
+  
+  def init_generation_state(
+    self, batch: int, device: torch.device, dtype: torch.dtype
+  ) -> GenerationState:
+    """Fresh per-layer recurrent state for a generation session (Phase 3,
+    stage 02). One entry per block — the state is a list because each
+    block's mixer carries its own hidden state independently."""
+    return [
+      block.mixer.init_state(batch, device, dtype) for block in self.blocks # type: ignore
+    ]
+
+  def step(self, token: Tensor, state: GenerationState | None) -> tuple[Tensor, GenerationState]:
+    if token.dim() != 1:
+      raise ValueError(f"step expects (B,) token ids, got {tuple(token.shape)}")
+
+    x = self.embedding(token.unsqueeze(1)).squeeze(1)  # (B, D)
+    if state is None:
+      state = self.init_generation_state(token.shape[0], x.device, x.dtype)
+
+    new_state = []
+    for block, layer_state in zip(self.blocks, state, strict=True):
+      x, s = block.step(x, layer_state) # type: ignore
+      new_state.append(s)
+
+    x = self.norm_out(x)
+    logits = self.head(x)  # (B, vocab_size)
+    return logits, new_state

@@ -20,5 +20,11 @@ class SSMBlock(nn.Module):
   
   def forward(self, x: Tensor)-> Tensor:
     x = x + self.mixer(self.norm1(x))
-    return x + self.ffn(self.norm2(x))\
+    return x + self.ffn(self.norm2(x))
+  
+  def step(self, x_t: Tensor, state: Tensor | None = None)-> tuple[Tensor, Tensor]:
+    mixed, new_state = self.mixer.step(self.norm1(x_t), state)  # type: ignore
+    x_t = x_t + mixed
+    x_t = x_t + self.ffn(self.norm2(x_t))
+    return x_t, new_state
     

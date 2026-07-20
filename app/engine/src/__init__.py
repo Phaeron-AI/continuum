@@ -16,6 +16,7 @@ from models.world_model.model import (
   load_checkpoint,
   save_checkpoint,
 )
+from models.world_model.session import GenerationSession
 from models.world_model.training import (
   TrainConfig,
   TrainState,
@@ -50,6 +51,9 @@ __all__ = [
   "WorldModelConfig",
   "WorldModel",
   "GenerationState",
+
+  # Session (3.2)
+  "GenerationSession",
 
   # Training
   "WMEvalReport",
