@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
+import torch
 from torch.utils.data import DataLoader
 
 from data.loading.frame_dataset import FrameDataset
@@ -115,6 +116,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
+  torch.backends.cudnn.enabled = False
   args = _parse_args(argv)
   logging.basicConfig(
     level=getattr(logging, args.log_level.upper(), logging.INFO),
