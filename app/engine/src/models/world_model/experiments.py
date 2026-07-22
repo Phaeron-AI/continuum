@@ -252,7 +252,7 @@ def run_ablation(
   print("\n" + table + "\n")
   if out:
     Path(out).parent.mkdir(parents=True, exist_ok=True)
-    Path(out).write_text(table + "\n")
+    Path(out).write_text(table + "\n", encoding="utf-8")
     logger.info("Wrote %s", out)
   return results
 
