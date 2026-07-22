@@ -1,0 +1,32 @@
+# Phase 1 tokenizer training — FSQ tokenizer over the Phase 0 grid2d frames.
+# Run: python scripts/train_tokenizer.py --config configs/phase1_tokenizer.yaml
+#
+# levels sets the FSQ vocab (product of levels). [4,4,4] = 64 codes: small and
+# fast, good for a first end-to-end run and the ablation. Bump to [8,8,8,5,5]
+# (=12800) for reconstruction quality once the pipeline is proven.
+
+tokenizer:
+  levels: [4, 4, 4]
+  hidden: 64
+  grid_size: 8
+  input_size: 64
+  tokenizer_version: v1
+
+train:
+  max_steps: 10000
+  lr: 0.0003
+  log_every: 100
+  checkpoint_every: 2000
+  device: auto
+  amp: true
+  grad_clip: 1.0
+  checkpoint_dir: checkpoints/tokenizer/phase1_v1
+
+data:
+  dataset_dir: data/raw/phase0_grid2d_v1
+  batch_size: 64
+  num_workers: 4
+  eval_fraction: 0.1
+  split_seed: 0
+  input_size: 64
+  eval_on_finish: true
