@@ -25,7 +25,7 @@ from models.tokenizer import (
   FrozenTokenizer,
   Tokenizer
 )
-from models.world_model import IdentityMixer, make_mixer
+from models.world_model.layers import IdentityMixer, MambaMixer, make_mixer
 
 
 # ---- mixer interface ----
@@ -48,8 +48,9 @@ def test_mixer_rejects_wrong_shape() -> None:
 
 def test_make_mixer_factory() -> None:
     assert isinstance(make_mixer("identity", 32), IdentityMixer)
+    assert isinstance(make_mixer("mamba", 32), MambaMixer)
     with pytest.raises(ValueError):
-        make_mixer("mamba", 32)  # not available yet
+        make_mixer("bogus", 32)  # not available yet
 
 
 # ---- fixtures: real dataset + frozen tokenizer + cache ----
