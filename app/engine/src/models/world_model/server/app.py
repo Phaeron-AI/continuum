@@ -7,11 +7,22 @@ from functools import lru_cache
 
 import numpy as np
 import torch
-from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import (
+  Depends,
+  FastAPI,
+  File,
+  HTTPException,
+  Request,
+  UploadFile,
+  WebSocket,
+  WebSocketDisconnect,
+)
 from fastapi.concurrency import run_in_threadpool
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from PIL import Image
 
+from data.storage.transforms import frame_to_tensor, tensor_to_frame
 from models.tokenizer.frozen import FrozenTokenizer
 from models.world_model.model.checkpoint import build_world_model_from_checkpoint
 from models.world_model.model.world_model import WorldModel
@@ -30,6 +41,8 @@ TOKENIZER_CHECKPOINT = os.environ.get("CONTINUUM_TOKENIZER_CHECKPOINT", "")
 DEVICE = os.environ.get("CONTINUUM_DEVICE", "cuda" if torch.cuda.is_available() else "cpu")
 SESSION_TTL_SECONDS = float(os.environ.get("CONTINUUM_SESSION_TTL_SECONDS", "300"))
 SWEEP_INTERVAL_SECONDS = float(os.environ.get("CONTINUUM_SWEEP_INTERVAL_SECONDS", "30"))
+# Comma-separated allowed origins for the browser player; "*" for local dev.
+ALLOWED_ORIGINS = os.environ.get("CONTINUUM_ALLOWED_ORIGINS", "*").split(",")
 
 
 @lru_cache(maxsize=1)
@@ -84,6 +97,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="continuum inference server", lifespan=lifespan)
 
+# The React player is a separate origin (Vite dev server / static host); allow
+# it to reach the REST seed endpoint. WebSocket frames are not subject to CORS.
+# Lock ALLOWED_ORIGINS down to your real host(s) in production.
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=ALLOWED_ORIGINS,
+  allow_methods=["*"],
+  allow_headers=["*"],
+)
+
 
 def get_registry(request: Request)-> SessionRegistry:
   return request.app.state.registry
@@ -91,13 +114,16 @@ def get_registry(request: Request)-> SessionRegistry:
 
 def _decode_png_to_tensor(data: bytes)-> torch.Tensor:
   img = Image.open(io.BytesIO(data)).convert("RGB")
-  arr = np.asarray(img, dtype=np.float32) / 255.0  # (H, W, C)
-  return torch.from_numpy(arr).permute(2, 0, 1)  # (C, H, W)
+  arr = np.asarray(img, dtype=np.uint8)  # (H, W, C)
+  # frame_to_tensor is the training preprocessing: resize to the tokenizer's
+  # input size and normalise to [-1, 1]. Using it here keeps seed frames in the
+  # exact range the tokenizer was trained on (a plain /255 would be wrong).
+  return frame_to_tensor(arr, target_size=(64, 64))  # (C, H, W) in [-1, 1]
 
 
 def _encode_tensor_to_png(frame: torch.Tensor)-> bytes:
-  arr = (frame.clamp(0.0, 1.0) * 255.0).round().to(torch.uint8)
-  arr = arr.permute(1, 2, 0).cpu().numpy()  # (H, W, C)
+  # The decoder emits [-1, 1]; tensor_to_frame clamps and maps back to uint8.
+  arr = tensor_to_frame(frame)  # (H, W, C) uint8
   img = Image.fromarray(arr, mode="RGB")
   buf = io.BytesIO()
   img.save(buf, format="PNG")
@@ -167,6 +193,42 @@ async def advance_session(
     return Response(content=png_bytes, media_type="image/png")
 
   return TokenGridResponse(grid=result[0].tolist())
+
+
+@app.websocket("/sessions/{session_id}/stream")
+async def stream_session(websocket: WebSocket, session_id: str)-> None:
+  """Data-plane stream: the browser connects directly here and drives the
+  session in a tight loop — JSON {action, temperature} in, PNG frame bytes out,
+  one round-trip per frame over a persistent socket (no per-frame HTTP). This
+  is the latency-critical path and deliberately bypasses any control-plane
+  middleware."""
+  registry: SessionRegistry = websocket.app.state.registry
+  entry = registry.get(session_id)
+  if entry is None:
+    await websocket.close(code=4404)  # session not found
+    return
+
+  await websocket.accept()
+  try:
+    while True:
+      msg = await websocket.receive_json()
+      action_id = int(msg["action"])
+      temperature = float(msg.get("temperature", 0.0))
+
+      async with entry.lock:
+        def _run(action_id: int = action_id, temperature: float = temperature):
+          action = torch.tensor([action_id], dtype=torch.long)
+          return entry.session.advance(
+            action, return_pixels=True, temperature=temperature
+          )
+
+        result = await run_in_threadpool(_run)
+
+      await websocket.send_bytes(_encode_tensor_to_png(result[0]))
+  except WebSocketDisconnect:
+    return
+  except (RuntimeError, ValueError, KeyError) as exc:
+    await websocket.close(code=4400, reason=str(exc)[:120])
 
 
 @app.get("/sessions/{session_id}/metrics", response_model=LatencyReportResponse)
