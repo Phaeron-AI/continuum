@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from models.world_model.layers import SequenceMixer, SelectiveSSM
+from models.world_model.layers import SelectiveSSM, SequenceMixer
 
 MambaState = tuple[Tensor, Tensor]
 

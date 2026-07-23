@@ -3,6 +3,7 @@ from __future__ import annotations
 import torch.nn.functional as F
 from torch import Tensor
 
+
 def associative_scan(a: Tensor, u: Tensor)-> Tensor:
   if a.shape != u.shape:
     raise ValueError(f"a and u must match; got: {a.shape} & {u.shape}")

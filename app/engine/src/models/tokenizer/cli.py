@@ -6,8 +6,8 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
-import yaml
 import torch
+import yaml
 from torch.utils.data import DataLoader
 
 from data.loading.frame_dataset import FrameDataset
