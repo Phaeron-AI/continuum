@@ -34,7 +34,12 @@ def make_mixer(kind: str, d_model: int, **kwargs: object)-> SequenceMixer:
 
     d_state = int(kwargs.get("d_state", 16))  # type: ignore
     return SelectiveSSM(d_model, d_state=d_state)
+  if kind == "mamba":
+    from models.world_model.layers.mamba import MambaMixer
+
+    d_state = int(kwargs.get("d_state", 16))  # type: ignore
+    d_conv = int(kwargs.get("d_conv", 4))  # type: ignore
+    return MambaMixer(d_model, d_state=d_state, d_conv=d_conv)
   raise ValueError(
-    f"unknown mixer kind: {kind!r}. Available: 'identity' "
-    f"(ssm/mamba land in later sub-phases)"
+    f"unknown mixer kind: {kind!r}. Available: 'identity', 'ssm', 'mamba'"
   )

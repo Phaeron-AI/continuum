@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/engine
+    env:
+      # grid2d renders frames via pygame; run it headless on CI.
+      SDL_VIDEODRIVER: dummy
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('app/engine/pyproject.toml') }}
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      # Gate on the library code (clean); test-file lint is advisory so
+      # pre-existing import-ordering debt does not block the pipeline.
+      - name: Lint (ruff)
+        run: ruff check src
+
+      - name: Lint tests (advisory)
+        run: ruff check tests --exit-zero
+
+      - name: Test (fast)
+        run: pytest -m "not slow"

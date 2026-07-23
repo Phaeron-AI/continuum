@@ -20,10 +20,15 @@ def make_policy(name: str, num_actions: int, rng: np.random.Generator)-> Policy:
   return _REGISTRY[name](num_actions, rng)
 
 def _register_bullitins()-> None:
+  from envs.policies.directed_policy import DirectedPolicy
   from envs.policies.random_policy import RandomPolicy
 
   register_policy(
     "random", lambda num_actions, rng: RandomPolicy(num_actions=num_actions, rng=rng)
+  )
+
+  register_policy(
+    "directed", lambda num_actions, rng: DirectedPolicy(num_actions=num_actions, rng=rng)
   )
 
 _register_bullitins()

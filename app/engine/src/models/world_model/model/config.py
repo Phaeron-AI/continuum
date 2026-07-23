@@ -11,9 +11,13 @@ class WorldModelConfig:
   num_actions: int = 5
   d_model: int = 256
   d_state: int = 16
+  d_conv: int = 4
   n_layers: int = 4
   ffn_mult: int = 4
   mixer: str = "ssm"
+  # "inline" = actions ride the token stream (stage 06); "film" = actions also
+  # modulate every position of the frame they govern (stronger conditioning).
+  action_conditioning: str = "inline"
   tokenizer_version: str = "v1"
 
   def __post_init__(self)-> None:
@@ -23,6 +27,11 @@ class WorldModelConfig:
       raise ValueError(f"num_actions must be positive, got {self.num_actions}")
     if self.n_layers <= 0:
       raise ValueError(f"n_layers must be positive, got {self.n_layers}")
+    if self.action_conditioning not in ("inline", "film"):
+      raise ValueError(
+        f"action_conditioning must be 'inline' or 'film', got "
+        f"{self.action_conditioning!r}"
+      )
     
   @property
   def total_vocab(self)-> int:

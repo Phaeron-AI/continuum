@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from torch import Tensor
 
 from models.world_model.layers.mixer import SequenceMixer
+from models.world_model.layers.scan import associative_scan
 
 
 class SelectiveSSM(SequenceMixer):
@@ -49,6 +50,8 @@ class SelectiveSSM(SequenceMixer):
   def _scan(
     self, x: Tensor, A_bar: Tensor, B_t: Tensor, C_t: Tensor, delta: Tensor
   ) -> Tensor:
+    """Sequential O(L) reference scan. Retained as a readable oracle; the
+    hot path is now the parallel associative scan in forward()."""
     batch, length, d_model = x.shape
     h = torch.zeros(batch, d_model, self.d_state, device=x.device, dtype=x.dtype)
     outputs = []
@@ -62,13 +65,23 @@ class SelectiveSSM(SequenceMixer):
     y = torch.stack(outputs, dim=1)
     return y + self.D * x
 
+  def _readout(self, x: Tensor, h: Tensor, C_t: Tensor) -> Tensor:
+    """State sequence (B, L, D, N) -> output (B, L, D), with the D skip."""
+    y = torch.einsum("bldn,bln->bld", h, C_t)
+    return y + self.D * x
+
   def forward(self, x: Tensor) -> Tensor:
     if x.dim() != 3:
       raise ValueError(f"expected (B, L, D), got shape {tuple(x.shape)}")
     if x.shape[-1] != self.d_model:
       raise ValueError(f"last dim {x.shape[-1]} != d_model {self.d_model}")
-    A_bar, B_t, C_t, delta = self._discretize(x)
-    return self._scan(x, A_bar, B_t, C_t, delta)
+
+    A_bar, B_t, C_t, delta = self._discretize(x)  # A_bar (B,L,D,N)
+    # u_t = (delta_t * B_t) * x_t, broadcast to (B, L, D, N) — the additive
+    # input term of the recurrence h_t = A_bar_t * h_{t-1} + u_t.
+    u = (delta.unsqueeze(-1) * B_t.unsqueeze(2)) * x.unsqueeze(-1)
+    h = associative_scan(A_bar, u)  # (B, L, D, N), parallel over L
+    return self._readout(x, h, C_t)
 
   def init_state(
     self, batch: int, device: torch.device, dtype: torch.dtype
@@ -100,7 +113,7 @@ class SelectiveSSM(SequenceMixer):
     new_state, y_t = self._recurrence_step(state, x_t, A_bar, B_t, C_t, delta)
     y_t = y_t + self.D * x_t  # skip term, matching forward
     return y_t, new_state
-  
+
   @torch.no_grad()
   def naive_reference(self, x: Tensor) -> Tensor:
     batch, length, d_model = x.shape

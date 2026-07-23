@@ -1,6 +1,7 @@
 # Virtual Environment
 .venv/
 venv/
+cudavenv/
 
 # Python Bytecode
 __pycache__/
@@ -9,5 +10,5 @@ __pycache__/
 # Ruff Checks/Cache
 .ruff_cache/
 
-# Text Files
-*.txt
+# Data 
+data/

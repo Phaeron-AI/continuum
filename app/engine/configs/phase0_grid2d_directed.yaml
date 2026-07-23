@@ -1,0 +1,17 @@
+dataset_name: phase0_grid2d_v2
+output_dir: data/raw/phase0_grid2d_v2
+num_episodes: 500
+seed_start: 0
+episodes_per_shard: 100
+num_workers: 4
+ 
+env_name: grid2d
+policy_name: directed
+ 
+env:
+  canvas_size: 84
+  episode_length: 200
+  num_obstacles: 5
+  agent_radius: 3
+  obstacle_radius: 3
+  move_step: 3

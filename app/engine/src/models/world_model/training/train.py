@@ -23,11 +23,18 @@ class TrainConfig:
   device: str = "auto"
   amp: bool = True
   grad_clip: float = 1.0
+  # fraction of visual context tokens randomly corrupted each step; the
+  # anti-drift augmentation. 0.0 = pure teacher forcing (unchanged default).
+  context_noise_prob: float = 0.0
   checkpoint_dir: str = "checkpoints/world_model"
 
   def __post_init__(self)-> None:
     if self.max_steps <= 0:
       raise ValueError(f"max steps must be positive, Got: {self.max_steps}")
+    if not 0.0 <= self.context_noise_prob < 1.0:
+      raise ValueError(
+        f"context_noise_prob must be in [0, 1), got {self.context_noise_prob}"
+      )
   
 @dataclass
 class TrainState:
@@ -68,7 +75,7 @@ def train_world_model(
 
     optimizer.zero_grad(set_to_none=True)
     with torch.autocast(device_type=device.type, enabled=use_amp):
-        loss = model.loss(ids)
+        loss = model.loss(ids, context_noise_prob=config.context_noise_prob)
 
     scaler.scale(loss).backward()
     if config.grad_clip > 0:
