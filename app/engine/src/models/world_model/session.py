@@ -118,6 +118,8 @@ class GenerationSession:
       raise ValueError(
         f"action batch {action.shape[0]} does not match session batch {self._batch}"
       )
+    
+    action = action.to(self._device)
 
     track = self._track_latency
     step_ms = 0.0
