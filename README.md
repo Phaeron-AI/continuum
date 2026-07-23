@@ -125,6 +125,6 @@ python scripts/run_ablation.py --cache data/token_cache/phase1_v2 \
 - [x] Phase 1 — FSQ tokenizer (frozen token grids)
 - [x] Phase 2 — selective-SSM world model, parallel scan, training loop
 - [x] Ablation — measured effect of mamba / film / noise-aug on rollout drift
-- [ ] Phase 3 — real-time recurrent rollout + in-browser playable demo
+- [x] Phase 3 — real-time recurrent rollout + in-browser playable demo
 
 ## Complete Mathematical Walkthroughs and Derivations Coming Soon!
