@@ -4,6 +4,7 @@ from models.world_model.layers import (
   IdentityMixer,
   SelectiveSSM,
   SequenceMixer,
+  MambaMixer,
   SSMBlock,
   TokenEmbedding,
   make_mixer,
@@ -41,6 +42,7 @@ __all__ = [
   "TokenEmbedding",
   "SequenceMixer",
   "IdentityMixer",
+  "MambaMixer",
   "make_mixer",
   "SelectiveSSM",
 

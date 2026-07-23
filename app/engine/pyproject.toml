@@ -58,3 +58,5 @@ typeCheckingMode = "standard"
 
 [tool.ruff.lint.per-file-ignores]
 "src/models/world_model/server/*.py" = ["B008"]
+
+filterwarnings = ["ignore::DeprecationWarning:pygame.*"]

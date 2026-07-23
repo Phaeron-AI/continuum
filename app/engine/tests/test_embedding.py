@@ -35,7 +35,8 @@ def test_embedding_shape_and_total_vocab() -> None:
     assert out.dtype == torch.float32
 
 
-def test_rejects_out_of_range_ids() -> None:
+def test_rejects_out_of_range_ids(monkeypatch) -> None:
+    monkeypatch.setattr("models.world_model.layers.embedding._CHECK_IDS", True)
     emb = TokenEmbedding(vocab_size=10, num_actions=3, d_model=8)
     with pytest.raises(ValueError):
         emb(torch.tensor([[0, 13]]))  # 13 >= total_vocab (13)
